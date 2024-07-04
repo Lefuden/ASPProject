@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ASPProjectBackend.Models;
+﻿namespace ASPProjectBackend.Models;
 
 public class ShoppingCart
 {
-    [Key]
     public int ShoppingCartId { get; set; }
     public int CustomerId { get; set; }
     public Customer Customer { get; set; }

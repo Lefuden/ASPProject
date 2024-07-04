@@ -6,9 +6,6 @@ namespace ASPProjectBackend.Models;
 
 public class Customer : IdentityUser<int>
 {
-    [Key]
-    public int CustomerId { get; set; }
-
     [Required]
     [StringLength(30, MinimumLength = 1, ErrorMessage = "First name must be between 1 and 30 characters")]
     [DisplayName("First Name")]

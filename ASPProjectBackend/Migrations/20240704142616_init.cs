@@ -12,7 +12,7 @@ namespace ASPProjectBackend.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Address",
+                name: "Addresses",
                 columns: table => new
                 {
                     AddressId = table.Column<int>(type: "int", nullable: false)
@@ -24,7 +24,7 @@ namespace ASPProjectBackend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Address", x => x.AddressId);
+                    table.PrimaryKey("PK_Addresses", x => x.AddressId);
                 });
 
             migrationBuilder.CreateTable(
@@ -67,7 +67,6 @@ namespace ASPProjectBackend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     AddressId = table.Column<int>(type: "int", nullable: false),
@@ -91,9 +90,9 @@ namespace ASPProjectBackend.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUsers_Address_AddressId",
+                        name: "FK_AspNetUsers_Addresses_AddressId",
                         column: x => x.AddressId,
-                        principalTable: "Address",
+                        principalTable: "Addresses",
                         principalColumn: "AddressId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -214,24 +213,22 @@ namespace ASPProjectBackend.Migrations
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     OrderStatus = table.Column<byte>(type: "tinyint", nullable: false),
                     TotalOrderPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ShippingAddressAddressId = table.Column<int>(type: "int", nullable: false),
-                    BillingAddressAddressId = table.Column<int>(type: "int", nullable: false)
+                    ShippingAddressId = table.Column<int>(type: "int", nullable: false),
+                    BillingAddressId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.OrderId);
                     table.ForeignKey(
-                        name: "FK_Orders_Address_BillingAddressAddressId",
-                        column: x => x.BillingAddressAddressId,
-                        principalTable: "Address",
-                        principalColumn: "AddressId",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Orders_Addresses_BillingAddressId",
+                        column: x => x.BillingAddressId,
+                        principalTable: "Addresses",
+                        principalColumn: "AddressId");
                     table.ForeignKey(
-                        name: "FK_Orders_Address_ShippingAddressAddressId",
-                        column: x => x.ShippingAddressAddressId,
-                        principalTable: "Address",
-                        principalColumn: "AddressId",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Orders_Addresses_ShippingAddressId",
+                        column: x => x.ShippingAddressId,
+                        principalTable: "Addresses",
+                        principalColumn: "AddressId");
                     table.ForeignKey(
                         name: "FK_Orders_AspNetUsers_CustomerId",
                         column: x => x.CustomerId,
@@ -370,9 +367,9 @@ namespace ASPProjectBackend.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_BillingAddressAddressId",
+                name: "IX_Orders_BillingAddressId",
                 table: "Orders",
-                column: "BillingAddressAddressId");
+                column: "BillingAddressId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_CustomerId",
@@ -380,9 +377,9 @@ namespace ASPProjectBackend.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_ShippingAddressAddressId",
+                name: "IX_Orders_ShippingAddressId",
                 table: "Orders",
-                column: "ShippingAddressAddressId");
+                column: "ShippingAddressId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShoppingCartProducts_ProductId",
@@ -442,7 +439,7 @@ namespace ASPProjectBackend.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Address");
+                name: "Addresses");
         }
     }
 }

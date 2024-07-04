@@ -52,7 +52,7 @@ namespace ASPProjectBackend.Migrations
 
                     b.HasKey("AddressId");
 
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("ASPProjectBackend.Models.Customer", b =>
@@ -72,9 +72,6 @@ namespace ASPProjectBackend.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -152,7 +149,7 @@ namespace ASPProjectBackend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
 
-                    b.Property<int>("BillingAddressAddressId")
+                    b.Property<int>("BillingAddressId")
                         .HasColumnType("int");
 
                     b.Property<int>("CustomerId")
@@ -164,7 +161,7 @@ namespace ASPProjectBackend.Migrations
                     b.Property<byte>("OrderStatus")
                         .HasColumnType("tinyint");
 
-                    b.Property<int>("ShippingAddressAddressId")
+                    b.Property<int>("ShippingAddressId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("TotalOrderPrice")
@@ -172,11 +169,11 @@ namespace ASPProjectBackend.Migrations
 
                     b.HasKey("OrderId");
 
-                    b.HasIndex("BillingAddressAddressId");
+                    b.HasIndex("BillingAddressId");
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("ShippingAddressAddressId");
+                    b.HasIndex("ShippingAddressId");
 
                     b.ToTable("Orders");
                 });
@@ -445,8 +442,8 @@ namespace ASPProjectBackend.Migrations
                 {
                     b.HasOne("ASPProjectBackend.Models.Address", "BillingAddress")
                         .WithMany()
-                        .HasForeignKey("BillingAddressAddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("BillingAddressId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ASPProjectBackend.Models.Customer", "Customer")
@@ -457,8 +454,8 @@ namespace ASPProjectBackend.Migrations
 
                     b.HasOne("ASPProjectBackend.Models.Address", "ShippingAddress")
                         .WithMany()
-                        .HasForeignKey("ShippingAddressAddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("ShippingAddressId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("BillingAddress");

@@ -1,19 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ASPProjectBackend.Models;
+﻿namespace ASPProjectBackend.Models;
 
 public class Order
 {
-    [Key]
     public int OrderId { get; set; }
     public int CustomerId { get; set; }
     public Customer Customer { get; set; }
     public DateTime OrderDate { get; set; } = DateTime.Now;
     public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
     public decimal TotalOrderPrice { get; set; }
+
+    public int ShippingAddressId { get; set; }
     public Address ShippingAddress { get; set; }
+
+    public int BillingAddressId { get; set; }
     public Address BillingAddress { get; set; }
-    public ICollection<OrderProduct> Products { get; set; }
+
+    public ICollection<OrderProduct> Products { get; set; } = [];
 }
 
 

@@ -5,7 +5,6 @@ namespace ASPProjectBackend.Models;
 
 public class Address
 {
-    [Key]
     public int AddressId { get; set; }
 
     [Required]

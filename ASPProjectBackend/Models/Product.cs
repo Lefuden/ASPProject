@@ -5,7 +5,6 @@ namespace ASPProjectBackend.Models;
 
 public class Product
 {
-    [Key]
     public int ProductId { get; set; }
 
     [Required]
