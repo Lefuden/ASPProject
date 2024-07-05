@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ASPProjectBackend.Data;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<Customer, IdentityRole<int>, int>(options)
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<User, IdentityRole<int>, int>(options)
 {
     public DbSet<Address> Addresses { get; set; }
-    public DbSet<Customer> Customers { get; set; }
+    public DbSet<User> Users { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderProduct> OrderProducts { get; set; }
     public DbSet<Product> Products { get; set; }
@@ -51,9 +51,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasIndex(sci => new { sci.ShoppingCartId, sci.ProductId })
             .IsUnique();
 
-        modelBuilder.Entity<Customer>()
+        modelBuilder.Entity<User>()
             .HasOne(c => c.ShoppingCart)
-            .WithOne(sc => sc.Customer)
-            .HasForeignKey<ShoppingCart>(sc => sc.CustomerId);
+            .WithOne(sc => sc.User)
+            .HasForeignKey<ShoppingCart>(sc => sc.UserId);
     }
 }

@@ -15,7 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<Customer, IdentityRole<int>>()
+builder.Services.AddIdentity<User, IdentityRole<int>>()
     .AddRoles<IdentityRole<int>>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
@@ -73,7 +73,7 @@ app.Run();
 
 static async Task CreateDefaultRoles(RoleManager<IdentityRole<int>> roleManager)
 {
-    var roles = new[] { "Admin", "Customer" };
+    var roles = new[] { "Admin", "User" };
     foreach (var role in roles)
     {
         if (!await roleManager.RoleExistsAsync(role))

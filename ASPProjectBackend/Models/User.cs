@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ASPProjectBackend.Models;
 
-public class Customer : IdentityUser<int>
+public class User : IdentityUser<int>
 {
     [Required]
     [StringLength(30, MinimumLength = 1, ErrorMessage = "First name must be between 1 and 30 characters")]

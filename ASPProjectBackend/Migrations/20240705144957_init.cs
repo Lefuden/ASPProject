@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -209,7 +208,7 @@ namespace ASPProjectBackend.Migrations
                 {
                     OrderId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     OrderStatus = table.Column<byte>(type: "tinyint", nullable: false),
                     TotalOrderPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -230,8 +229,8 @@ namespace ASPProjectBackend.Migrations
                         principalTable: "Addresses",
                         principalColumn: "AddressId");
                     table.ForeignKey(
-                        name: "FK_Orders_AspNetUsers_CustomerId",
-                        column: x => x.CustomerId,
+                        name: "FK_Orders_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -243,14 +242,14 @@ namespace ASPProjectBackend.Migrations
                 {
                     ShoppingCartId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomerId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ShoppingCarts", x => x.ShoppingCartId);
                     table.ForeignKey(
-                        name: "FK_ShoppingCarts_AspNetUsers_CustomerId",
-                        column: x => x.CustomerId,
+                        name: "FK_ShoppingCarts_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -372,14 +371,14 @@ namespace ASPProjectBackend.Migrations
                 column: "BillingAddressId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_CustomerId",
-                table: "Orders",
-                column: "CustomerId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Orders_ShippingAddressId",
                 table: "Orders",
                 column: "ShippingAddressId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_UserId",
+                table: "Orders",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShoppingCartProducts_ProductId",
@@ -393,9 +392,9 @@ namespace ASPProjectBackend.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShoppingCarts_CustomerId",
+                name: "IX_ShoppingCarts_UserId",
                 table: "ShoppingCarts",
-                column: "CustomerId",
+                column: "UserId",
                 unique: true);
         }
 

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASPProjectBackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240704142616_init")]
+    [Migration("20240705144957_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -58,7 +58,160 @@ namespace ASPProjectBackend.Migrations
                     b.ToTable("Addresses");
                 });
 
-            modelBuilder.Entity("ASPProjectBackend.Models.Customer", b =>
+            modelBuilder.Entity("ASPProjectBackend.Models.Order", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
+
+                    b.Property<int>("BillingAddressId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("OrderStatus")
+                        .HasColumnType("tinyint");
+
+                    b.Property<int>("ShippingAddressId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalOrderPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderId");
+
+                    b.HasIndex("BillingAddressId");
+
+                    b.HasIndex("ShippingAddressId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("ASPProjectBackend.Models.OrderProduct", b =>
+                {
+                    b.Property<int>("OrderProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderProductId"));
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<byte>("Quantity")
+                        .HasColumnType("tinyint");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("OrderProductId");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderProducts");
+                });
+
+            modelBuilder.Entity("ASPProjectBackend.Models.Product", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
+
+                    b.Property<int?>("AppId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<float>("Discount")
+                        .HasColumnType("real");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<byte>("Stock")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("ProductId");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("ASPProjectBackend.Models.ShoppingCart", b =>
+                {
+                    b.Property<int>("ShoppingCartId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShoppingCartId"));
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ShoppingCartId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("ShoppingCarts");
+                });
+
+            modelBuilder.Entity("ASPProjectBackend.Models.ShoppingCartProduct", b =>
+                {
+                    b.Property<int>("ShoppingCartProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShoppingCartProductId"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<byte>("Quantity")
+                        .HasColumnType("tinyint");
+
+                    b.Property<int>("ShoppingCartId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ShoppingCartProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ShoppingCartId", "ProductId")
+                        .IsUnique();
+
+                    b.ToTable("ShoppingCartProducts");
+                });
+
+            modelBuilder.Entity("ASPProjectBackend.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -142,159 +295,6 @@ namespace ASPProjectBackend.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("ASPProjectBackend.Models.Order", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
-
-                    b.Property<int>("BillingAddressId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<byte>("OrderStatus")
-                        .HasColumnType("tinyint");
-
-                    b.Property<int>("ShippingAddressId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TotalOrderPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("OrderId");
-
-                    b.HasIndex("BillingAddressId");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("ShippingAddressId");
-
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("ASPProjectBackend.Models.OrderProduct", b =>
-                {
-                    b.Property<int>("OrderProductId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderProductId"));
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<byte>("Quantity")
-                        .HasColumnType("tinyint");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("OrderProductId");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("OrderProducts");
-                });
-
-            modelBuilder.Entity("ASPProjectBackend.Models.Product", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
-
-                    b.Property<int?>("AppId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<float>("Discount")
-                        .HasColumnType("real");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<byte>("Stock")
-                        .HasColumnType("tinyint");
-
-                    b.HasKey("ProductId");
-
-                    b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("ASPProjectBackend.Models.ShoppingCart", b =>
-                {
-                    b.Property<int>("ShoppingCartId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShoppingCartId"));
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ShoppingCartId");
-
-                    b.HasIndex("CustomerId")
-                        .IsUnique();
-
-                    b.ToTable("ShoppingCarts");
-                });
-
-            modelBuilder.Entity("ASPProjectBackend.Models.ShoppingCartProduct", b =>
-                {
-                    b.Property<int>("ShoppingCartProductId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShoppingCartProductId"));
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<byte>("Quantity")
-                        .HasColumnType("tinyint");
-
-                    b.Property<int>("ShoppingCartId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ShoppingCartProductId");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("ShoppingCartId", "ProductId")
-                        .IsUnique();
-
-                    b.ToTable("ShoppingCartProducts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -430,17 +430,6 @@ namespace ASPProjectBackend.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ASPProjectBackend.Models.Customer", b =>
-                {
-                    b.HasOne("ASPProjectBackend.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Address");
-                });
-
             modelBuilder.Entity("ASPProjectBackend.Models.Order", b =>
                 {
                     b.HasOne("ASPProjectBackend.Models.Address", "BillingAddress")
@@ -449,23 +438,23 @@ namespace ASPProjectBackend.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("ASPProjectBackend.Models.Customer", "Customer")
-                        .WithMany("Orders")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ASPProjectBackend.Models.Address", "ShippingAddress")
                         .WithMany()
                         .HasForeignKey("ShippingAddressId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("ASPProjectBackend.Models.User", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("BillingAddress");
 
-                    b.Navigation("Customer");
-
                     b.Navigation("ShippingAddress");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ASPProjectBackend.Models.OrderProduct", b =>
@@ -489,13 +478,13 @@ namespace ASPProjectBackend.Migrations
 
             modelBuilder.Entity("ASPProjectBackend.Models.ShoppingCart", b =>
                 {
-                    b.HasOne("ASPProjectBackend.Models.Customer", "Customer")
+                    b.HasOne("ASPProjectBackend.Models.User", "User")
                         .WithOne("ShoppingCart")
-                        .HasForeignKey("ASPProjectBackend.Models.ShoppingCart", "CustomerId")
+                        .HasForeignKey("ASPProjectBackend.Models.ShoppingCart", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ASPProjectBackend.Models.ShoppingCartProduct", b =>
@@ -517,6 +506,17 @@ namespace ASPProjectBackend.Migrations
                     b.Navigation("ShoppingCart");
                 });
 
+            modelBuilder.Entity("ASPProjectBackend.Models.User", b =>
+                {
+                    b.HasOne("ASPProjectBackend.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Address");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
@@ -528,7 +528,7 @@ namespace ASPProjectBackend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
-                    b.HasOne("ASPProjectBackend.Models.Customer", null)
+                    b.HasOne("ASPProjectBackend.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -537,7 +537,7 @@ namespace ASPProjectBackend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
-                    b.HasOne("ASPProjectBackend.Models.Customer", null)
+                    b.HasOne("ASPProjectBackend.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -552,7 +552,7 @@ namespace ASPProjectBackend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ASPProjectBackend.Models.Customer", null)
+                    b.HasOne("ASPProjectBackend.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -561,18 +561,10 @@ namespace ASPProjectBackend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.HasOne("ASPProjectBackend.Models.Customer", null)
+                    b.HasOne("ASPProjectBackend.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ASPProjectBackend.Models.Customer", b =>
-                {
-                    b.Navigation("Orders");
-
-                    b.Navigation("ShoppingCart")
                         .IsRequired();
                 });
 
@@ -584,6 +576,14 @@ namespace ASPProjectBackend.Migrations
             modelBuilder.Entity("ASPProjectBackend.Models.ShoppingCart", b =>
                 {
                     b.Navigation("ShoppingCartProducts");
+                });
+
+            modelBuilder.Entity("ASPProjectBackend.Models.User", b =>
+                {
+                    b.Navigation("Orders");
+
+                    b.Navigation("ShoppingCart")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

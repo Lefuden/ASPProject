@@ -3,8 +3,8 @@
 public class Order
 {
     public int OrderId { get; set; }
-    public int CustomerId { get; set; }
-    public Customer Customer { get; set; }
+    public int UserId { get; set; }
+    public User User { get; set; }
     public DateTime OrderDate { get; set; } = DateTime.Now;
     public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
     public decimal TotalOrderPrice { get; set; }
