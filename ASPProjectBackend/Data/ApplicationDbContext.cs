@@ -14,6 +14,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Product> Products { get; set; }
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     public DbSet<ShoppingCartProduct> ShoppingCartProducts { get; set; }
+    public DbSet<GameLibrary> GameLibraries { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
