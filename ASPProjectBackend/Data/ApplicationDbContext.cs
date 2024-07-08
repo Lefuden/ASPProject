@@ -12,8 +12,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderProduct> OrderProducts { get; set; }
     public DbSet<Product> Products { get; set; }
-    public DbSet<ShoppingCart> ShoppingCarts { get; set; }
-    public DbSet<ShoppingCartProduct> ShoppingCartProducts { get; set; }
+    //public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+    //public DbSet<ShoppingCartProduct> ShoppingCartProducts { get; set; }
     public DbSet<GameLibrary> GameLibraries { get; set; }
 
 
@@ -49,13 +49,13 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasForeignKey(o => o.BillingAddressId)
             .OnDelete(DeleteBehavior.NoAction);
 
-        modelBuilder.Entity<ShoppingCartProduct>()
-            .HasIndex(sci => new { sci.ShoppingCartId, sci.ProductId })
-            .IsUnique();
+        //modelBuilder.Entity<ShoppingCartProduct>()
+        //    .HasIndex(sci => new { sci.ShoppingCartId, sci.ProductId })
+        //    .IsUnique();
 
-        modelBuilder.Entity<User>()
-            .HasOne(c => c.ShoppingCart)
-            .WithOne(sc => sc.User)
-            .HasForeignKey<ShoppingCart>(sc => sc.UserId);
+        //modelBuilder.Entity<User>()
+        //    .HasOne(c => c.ShoppingCart)
+        //    .WithOne(sc => sc.User)
+        //    .HasForeignKey<ShoppingCart>(sc => sc.UserId);
     }
 }
