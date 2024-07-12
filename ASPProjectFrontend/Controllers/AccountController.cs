@@ -1,14 +1,34 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ASPProjectFrontend.Models;
+using ASPProjectFrontend.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ASPProjectFrontend.Controllers;
-public class AccountController : Controller
+public class AccountController(ApiServices apiServices) : Controller
 {
-    public IActionResult Index()
+    private readonly ApiServices _api = apiServices;
+
+    [HttpGet]
+    public async Task<IActionResult> AddAddress()
     {
-        return View();
+        return View(new Address());
     }
 
-    public IActionResult Login()
+    [HttpPost]
+    public async Task<IActionResult> UpdateAddress(Address address)
+    {
+        var user = HttpContext.User;
+        var result = await _api.AddAddressToNewUser(address, user);
+        if (result)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        else
+        {
+            return RedirectToAction("AddAddress");
+        }
+    }
+
+    public IActionResult Index()
     {
         return View();
     }

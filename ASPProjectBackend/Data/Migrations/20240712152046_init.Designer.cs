@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ASPProjectBackend.Migrations
+namespace ASPProjectBackend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240705144957_init")]
+    [Migration("20240712152046_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace ASPProjectBackend.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -56,6 +56,22 @@ namespace ASPProjectBackend.Migrations
                     b.HasKey("AddressId");
 
                     b.ToTable("Addresses");
+                });
+
+            modelBuilder.Entity("ASPProjectBackend.Models.GameLibrary", b =>
+                {
+                    b.Property<int>("GameLibraryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GameLibraryId"));
+
+                    b.Property<int>("appId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GameLibraryId");
+
+                    b.ToTable("GameLibraries");
                 });
 
             modelBuilder.Entity("ASPProjectBackend.Models.Order", b =>
@@ -165,52 +181,6 @@ namespace ASPProjectBackend.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("ASPProjectBackend.Models.ShoppingCart", b =>
-                {
-                    b.Property<int>("ShoppingCartId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShoppingCartId"));
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ShoppingCartId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("ShoppingCarts");
-                });
-
-            modelBuilder.Entity("ASPProjectBackend.Models.ShoppingCartProduct", b =>
-                {
-                    b.Property<int>("ShoppingCartProductId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShoppingCartProductId"));
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<byte>("Quantity")
-                        .HasColumnType("tinyint");
-
-                    b.Property<int>("ShoppingCartId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ShoppingCartProductId");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("ShoppingCartId", "ProductId")
-                        .IsUnique();
-
-                    b.ToTable("ShoppingCartProducts");
-                });
-
             modelBuilder.Entity("ASPProjectBackend.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -222,7 +192,7 @@ namespace ASPProjectBackend.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddressId")
+                    b.Property<int?>("AddressId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -237,12 +207,10 @@ namespace ASPProjectBackend.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
@@ -271,9 +239,6 @@ namespace ASPProjectBackend.Migrations
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ShoppingCartId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -476,43 +441,11 @@ namespace ASPProjectBackend.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("ASPProjectBackend.Models.ShoppingCart", b =>
-                {
-                    b.HasOne("ASPProjectBackend.Models.User", "User")
-                        .WithOne("ShoppingCart")
-                        .HasForeignKey("ASPProjectBackend.Models.ShoppingCart", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ASPProjectBackend.Models.ShoppingCartProduct", b =>
-                {
-                    b.HasOne("ASPProjectBackend.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ASPProjectBackend.Models.ShoppingCart", "ShoppingCart")
-                        .WithMany("ShoppingCartProducts")
-                        .HasForeignKey("ShoppingCartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("ShoppingCart");
-                });
-
             modelBuilder.Entity("ASPProjectBackend.Models.User", b =>
                 {
                     b.HasOne("ASPProjectBackend.Models.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AddressId");
 
                     b.Navigation("Address");
                 });
@@ -573,17 +506,9 @@ namespace ASPProjectBackend.Migrations
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("ASPProjectBackend.Models.ShoppingCart", b =>
-                {
-                    b.Navigation("ShoppingCartProducts");
-                });
-
             modelBuilder.Entity("ASPProjectBackend.Models.User", b =>
                 {
                     b.Navigation("Orders");
-
-                    b.Navigation("ShoppingCart")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
