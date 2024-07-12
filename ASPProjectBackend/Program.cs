@@ -63,11 +63,11 @@ app.UseAuthorization();
 app.MapControllers();
 
 
-//using (var scope = app.Services.CreateScope())
-//{
-//    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
-//    await CreateDefaultRoles(roleManager);
-//}
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+    await CreateDefaultRoles(roleManager);
+}
 
 
 app.Run();

@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ASPProjectBackend.Migrations
+namespace ASPProjectBackend.Data.Migrations
 {
     /// <inheritdoc />
     public partial class init : Migration
@@ -42,6 +43,19 @@ namespace ASPProjectBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "GameLibraries",
+                columns: table => new
+                {
+                    GameLibraryId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    appId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GameLibraries", x => x.GameLibraryId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -66,10 +80,9 @@ namespace ASPProjectBackend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    AddressId = table.Column<int>(type: "int", nullable: false),
-                    ShoppingCartId = table.Column<int>(type: "int", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
+                    AddressId = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -92,8 +105,7 @@ namespace ASPProjectBackend.Migrations
                         name: "FK_AspNetUsers_Addresses_AddressId",
                         column: x => x.AddressId,
                         principalTable: "Addresses",
-                        principalColumn: "AddressId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "AddressId");
                 });
 
             migrationBuilder.CreateTable(
@@ -237,25 +249,6 @@ namespace ASPProjectBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ShoppingCarts",
-                columns: table => new
-                {
-                    ShoppingCartId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ShoppingCarts", x => x.ShoppingCartId);
-                    table.ForeignKey(
-                        name: "FK_ShoppingCarts_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "OrderProducts",
                 columns: table => new
                 {
@@ -281,33 +274,6 @@ namespace ASPProjectBackend.Migrations
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "ProductId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ShoppingCartProducts",
-                columns: table => new
-                {
-                    ShoppingCartProductId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ShoppingCartId = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<byte>(type: "tinyint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ShoppingCartProducts", x => x.ShoppingCartProductId);
-                    table.ForeignKey(
-                        name: "FK_ShoppingCartProducts_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "ProductId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ShoppingCartProducts_ShoppingCarts_ShoppingCartId",
-                        column: x => x.ShoppingCartId,
-                        principalTable: "ShoppingCarts",
-                        principalColumn: "ShoppingCartId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -379,23 +345,6 @@ namespace ASPProjectBackend.Migrations
                 name: "IX_Orders_UserId",
                 table: "Orders",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ShoppingCartProducts_ProductId",
-                table: "ShoppingCartProducts",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ShoppingCartProducts_ShoppingCartId_ProductId",
-                table: "ShoppingCartProducts",
-                columns: new[] { "ShoppingCartId", "ProductId" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ShoppingCarts_UserId",
-                table: "ShoppingCarts",
-                column: "UserId",
-                unique: true);
         }
 
         /// <inheritdoc />
@@ -417,10 +366,10 @@ namespace ASPProjectBackend.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "OrderProducts");
+                name: "GameLibraries");
 
             migrationBuilder.DropTable(
-                name: "ShoppingCartProducts");
+                name: "OrderProducts");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -430,9 +379,6 @@ namespace ASPProjectBackend.Migrations
 
             migrationBuilder.DropTable(
                 name: "Products");
-
-            migrationBuilder.DropTable(
-                name: "ShoppingCarts");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
