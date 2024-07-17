@@ -4,6 +4,7 @@ using ASPProjectBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASPProjectBackend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240715124950_add gamelibrary again3")]
+    partial class addgamelibraryagain3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,9 +106,8 @@ namespace ASPProjectBackend.Data.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasAnnotation("Relational:JsonPropertyName", "name");
 
-                    b.Property<string>("RequiredAge")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                    b.Property<long>("RequiredAge")
+                        .HasColumnType("bigint")
                         .HasAnnotation("Relational:JsonPropertyName", "required_age");
 
                     b.Property<string>("ShortDescription")

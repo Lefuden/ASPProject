@@ -1,12 +1,18 @@
 using ASPProjectBackend.Data;
 using ASPProjectBackend.Models;
+using ASPProjectBackend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 // Add services to the container.
 
@@ -45,8 +51,14 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<ApiServices>();
+
+// Add logging before the build
 
 var app = builder.Build();
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+
+logger.LogInformation("Application build complete.");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -65,12 +77,34 @@ app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
-    await CreateDefaultRoles(roleManager);
+    logger.LogInformation("Creating service scope...");
+    try
+    {
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+        logger.LogInformation("Role manager obtained.");
+
+        await CreateDefaultRoles(roleManager);
+        logger.LogInformation("Default roles created.");
+
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        logger.LogInformation("ApplicationDbContext obtained.");
+
+        var api = scope.ServiceProvider.GetRequiredService<ApiServices>();
+        logger.LogInformation("ApiServices obtained.");
+
+        await DbInitializer.Init(context, api);
+        logger.LogInformation("Database initialization complete.");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred during application initialization.");
+        throw; // Re-throw the exception to fail the app startup if initialization fails
+    }
 }
 
-
 app.Run();
+
+logger.LogInformation("Application started.");
 
 static async Task CreateDefaultRoles(RoleManager<IdentityRole<int>> roleManager)
 {

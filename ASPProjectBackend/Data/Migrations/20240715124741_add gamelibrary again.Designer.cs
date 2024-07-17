@@ -4,6 +4,7 @@ using ASPProjectBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASPProjectBackend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240715124741_add gamelibrary again")]
+    partial class addgamelibraryagain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,9 +106,8 @@ namespace ASPProjectBackend.Data.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasAnnotation("Relational:JsonPropertyName", "name");
 
-                    b.Property<string>("RequiredAge")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                    b.Property<long>("RequiredAge")
+                        .HasColumnType("bigint")
                         .HasAnnotation("Relational:JsonPropertyName", "required_age");
 
                     b.Property<string>("ShortDescription")
@@ -480,6 +482,31 @@ namespace ASPProjectBackend.Data.Migrations
                                 .HasForeignKey("GameLibrarySteamAppid");
                         });
 
+                    b.OwnsOne("ASPProjectBackend.Models.MacRequirements", "MacRequirements", b1 =>
+                        {
+                            b1.Property<long>("GameLibrarySteamAppid")
+                                .HasColumnType("bigint");
+
+                            b1.Property<string>("Minimum")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "minimum");
+
+                            b1.Property<string>("Recommended")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasAnnotation("Relational:JsonPropertyName", "recommended");
+
+                            b1.HasKey("GameLibrarySteamAppid");
+
+                            b1.ToTable("GameLibraries");
+
+                            b1.HasAnnotation("Relational:JsonPropertyName", "mac_requirements");
+
+                            b1.WithOwner()
+                                .HasForeignKey("GameLibrarySteamAppid");
+                        });
+
                     b.OwnsOne("ASPProjectBackend.Models.Metacritic", "Metacritic", b1 =>
                         {
                             b1.Property<long>("GameLibrarySteamAppid")
@@ -608,24 +635,6 @@ namespace ASPProjectBackend.Data.Migrations
                             b1.ToTable("GameLibraries");
 
                             b1.HasAnnotation("Relational:JsonPropertyName", "linux_requirements");
-
-                            b1.WithOwner()
-                                .HasForeignKey("GameLibrarySteamAppid");
-                        });
-
-                    b.OwnsOne("System.Collections.Generic.List<ASPProjectBackend.Models.MacRequirements>", "MacRequirements", b1 =>
-                        {
-                            b1.Property<long>("GameLibrarySteamAppid")
-                                .HasColumnType("bigint");
-
-                            b1.Property<int>("Capacity")
-                                .HasColumnType("int");
-
-                            b1.HasKey("GameLibrarySteamAppid");
-
-                            b1.ToTable("GameLibraries");
-
-                            b1.HasAnnotation("Relational:JsonPropertyName", "mac_requirements");
 
                             b1.WithOwner()
                                 .HasForeignKey("GameLibrarySteamAppid");

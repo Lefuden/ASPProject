@@ -49,6 +49,17 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasForeignKey(o => o.BillingAddressId)
             .OnDelete(DeleteBehavior.NoAction);
 
+        modelBuilder.Entity<GameLibrary>(entity =>
+        {
+            entity.OwnsOne(e => e.PcRequirements);
+            entity.OwnsOne(e => e.MacRequirements);
+            entity.OwnsOne(e => e.PriceOverview);
+            entity.OwnsOne(e => e.Metacritic);
+            entity.OwnsOne(e => e.ReleaseDate);
+            entity.OwnsOne(e => e.LinuxRequirements);
+            entity.OwnsMany(e => e.Genres);
+        });
+
         //modelBuilder.Entity<ShoppingCartProduct>()
         //    .HasIndex(sci => new { sci.ShoppingCartId, sci.ProductId })
         //    .IsUnique();
