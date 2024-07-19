@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASPProjectBackend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240712152046_init")]
-    partial class init
+    [Migration("20240719185324_nullable types")]
+    partial class nullabletypes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,20 +58,107 @@ namespace ASPProjectBackend.Data.Migrations
                     b.ToTable("Addresses");
                 });
 
-            modelBuilder.Entity("ASPProjectBackend.Models.GameLibrary", b =>
+            modelBuilder.Entity("ASPProjectBackend.Models.Game", b =>
                 {
-                    b.Property<int>("GameLibraryId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GameLibraryId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("appId")
+                    b.Property<string>("AboutTheGame")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Background")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Categories")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("ComingSoon")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ContentDescriptors")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DetailedDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Developers")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Genres")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HeaderImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsFree")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LinuxRequirements")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MacRequirements")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("MetacriticScore")
                         .HasColumnType("int");
 
-                    b.HasKey("GameLibraryId");
+                    b.Property<string>("MetacriticUrl")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("GameLibraries");
+                    b.Property<string>("Movies")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PcRequirements")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Platforms")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Publishers")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReleaseDate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RequiredAge")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Screenshots")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShortDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SteamAppId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SupportInfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SupportedLanguages")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TotalAchievements")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TotalRecommendations")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Website")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Games");
                 });
 
             modelBuilder.Entity("ASPProjectBackend.Models.Order", b =>

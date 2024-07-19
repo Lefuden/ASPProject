@@ -1,6 +1,7 @@
 ﻿using ASPProjectBackend.Models;
+using ASPProjectBackend.Models.DTO;
 using ASPProjectBackend.Services;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace ASPProjectBackend.Data;
 
@@ -8,69 +9,86 @@ public static class DbInitializer
 {
     public static async Task Init(ApplicationDbContext context, ApiServices api)
     {
-        if (context.GameLibraries.Any())
+        if (context.Games.Any())
         {
             return;
         }
 
-        //string jsonString = api.InitializeDbFromSteamApi(); //skapa metod
-        string jsonString = @"{
-    ""2139460"": {
-        ""success"": true,
-        ""data"": {
-            ""type"": ""game"",
-            ""name"": ""Once Human"",
-            ""steam_appid"": 2139460,
-            ""required_age"": 0,
-            ""is_free"": true,
-            ""detailed_description"": ""<h1>Join our Discord!</h1><p><a href=\""https://steamcommunity.com/linkfilter/?u=https%3A%2F%2Fdiscord.gg%2Foncehuman\"" target=\""_blank\"" rel=\"" noopener\""  ><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/discord引流.jpg?t=1720769375\"" /></a></p><br><h1>About the Game</h1>The apocalypse changed everything. Human, animal, plant… all are infested by an alien creature – Stardust. As a Meta-Human, you can survive the contamination and use the power of Stardust. Play alone or join others to fight, build and explore. When the world is in chaos, you are our last hope.<h2 class=\""bb_tag\""><strong>Survive in the wilderness</strong></h2>You wake up in the middle of nowhere. You'll have to brace yourself for the cruelty of nature (from monsters to lack of food); however, Stardust's influence does not restrict to living things, it also affects the soil and water. Eating polluted food and drinking dirty water will reduce your Sanity. When your Sanity drops, your max HP would drop accordingly. To eat or not to eat, it's a question.<br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF1-开放世界_末日.gif?t=1720769375\"" /><h2 class=\""bb_tag\""><strong>Fight against monsters</strong></h2>Battle numerous enemies that are once human, and challenge bosses from another dimension to gain powerful items and ease Stardust pollution. You are not only fighting for yourself, but also fighting for the survivors. <br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF2-PVE.gif?t=1720769375\"" /><h2 class=\""bb_tag\""><strong>Customize weapons</strong></h2>With about 100 gun blueprints divided into seven categories for you to collect and craft, every loot grants you something new. Did I mention accessories and gun perks? Right, they are the heroes here. If our current weapon cannot satisfy your need, you can add different parts and perks, upgrade your firearm to your heart's content.  <br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF3-枪械武器装备（英）.gif?t=1720769375\"" /><h2 class=\""bb_tag\""><strong>Build territory</strong></h2>Use Territory Core to build a house of your own. You can keep a practical style, jamming everything needed in a small room; or you can design a townhouse with a patio, kitchen, garage… The best part is, you can relocate your territory any time you want! <br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF4-基地建设.gif?t=1720769375\"" /><h2 class=\""bb_tag\""><strong>Find out the truth</strong></h2>Delve into the truth of Stardust, find out where it came from, and what it wants. In the journey of seeking truth, you may feel alone, but you are never alone. There are several factions in the world, some can be violent and hostile, others might be friendly and helpful. Explore human settlements to learn their stories or exterminate bosses without leaving a name for survivors to praise, the choices are yours.<br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF5-大型多人在线.gif?t=1720769375\"" />"",
-            ""about_the_game"": ""The apocalypse changed everything. Human, animal, plant… all are infested by an alien creature – Stardust. As a Meta-Human, you can survive the contamination and use the power of Stardust. Play alone or join others to fight, build and explore. When the world is in chaos, you are our last hope.<h2 class=\""bb_tag\""><strong>Survive in the wilderness</strong></h2>You wake up in the middle of nowhere. You'll have to brace yourself for the cruelty of nature (from monsters to lack of food); however, Stardust's influence does not restrict to living things, it also affects the soil and water. Eating polluted food and drinking dirty water will reduce your Sanity. When your Sanity drops, your max HP would drop accordingly. To eat or not to eat, it's a question.<br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF1-开放世界_末日.gif?t=1720769375\"" /><h2 class=\""bb_tag\""><strong>Fight against monsters</strong></h2>Battle numerous enemies that are once human, and challenge bosses from another dimension to gain powerful items and ease Stardust pollution. You are not only fighting for yourself, but also fighting for the survivors. <br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF2-PVE.gif?t=1720769375\"" /><h2 class=\""bb_tag\""><strong>Customize weapons</strong></h2>With about 100 gun blueprints divided into seven categories for you to collect and craft, every loot grants you something new. Did I mention accessories and gun perks? Right, they are the heroes here. If our current weapon cannot satisfy your need, you can add different parts and perks, upgrade your firearm to your heart's content.  <br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF3-枪械武器装备（英）.gif?t=1720769375\"" /><h2 class=\""bb_tag\""><strong>Build territory</strong></h2>Use Territory Core to build a house of your own. You can keep a practical style, jamming everything needed in a small room; or you can design a townhouse with a patio, kitchen, garage… The best part is, you can relocate your territory any time you want! <br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF4-基地建设.gif?t=1720769375\"" /><h2 class=\""bb_tag\""><strong>Find out the truth</strong></h2>Delve into the truth of Stardust, find out where it came from, and what it wants. In the journey of seeking truth, you may feel alone, but you are never alone. There are several factions in the world, some can be violent and hostile, others might be friendly and helpful. Explore human settlements to learn their stories or exterminate bosses without leaving a name for survivors to praise, the choices are yours.<br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF5-大型多人在线.gif?t=1720769375\"" />"",
-            ""short_description"": ""Once Human is a multiplayer open-world survival game set in a strange, post-apocalyptic future. Unite with friends to fight monstrous enemies, uncover secret plots, compete for resources, and build your own territory. Once, you were merely human. Now, you have the power to remake the world."",
-            ""supported_languages"": ""English<strong>*</strong>, Simplified Chinese<strong>*</strong>, French, German, Japanese, Korean, Traditional Chinese<br><strong>*</strong>languages with full audio support"",
-            ""header_image"": ""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/header.jpg?t=1720769375"",
-            ""capsule_image"": ""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/capsule_231x87.jpg?t=1720769375"",
-            ""capsule_imagev5"": ""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/capsule_184x69.jpg?t=1720769375"",
-            ""website"": ""https://t.co/gRX2BR4tj9"",
-            ""pc_requirements"": {
-                ""minimum"": ""<strong>Minimum:</strong><br><ul class=\""bb_ul\""><li><strong>OS:</strong> Windows 10 64-bit Operating System<br></li><li><strong>Processor:</strong> Intel Core i5-4460<br></li><li><strong>Memory:</strong> 8 GB RAM<br></li><li><strong>Graphics:</strong> Nvidia GTX 750ti 4G / AMD Radeon RX550<br></li><li><strong>DirectX:</strong> Version 11<br></li><li><strong>Network:</strong> Broadband Internet connection<br></li><li><strong>Storage:</strong> 55 GB available space<br></li><li><strong>Additional Notes:</strong> SSD is highly recommended</li></ul>"",
-                ""recommended"": ""<strong>Recommended:</strong><br><ul class=\""bb_ul\""><li><strong>OS:</strong> Windows 10 64-bit Operating System<br></li><li><strong>Processor:</strong> Intel Core i7-7700<br></li><li><strong>Memory:</strong> 16 GB RAM<br></li><li><strong>Graphics:</strong> Nvidia GTX 1060 6G / AMD Radeon RX 580 2304SP / Intel ARC A380<br></li><li><strong>DirectX:</strong> Version 11<br></li><li><strong>Network:</strong> Broadband Internet connection<br></li><li><strong>Storage:</strong> 55 GB available space<br></li><li><strong>Additional Notes:</strong> SSD is highly recommended</li></ul>""
-            },
-            ""mac_requirements"": [],
-            ""linux_requirements"": [],
-            ""legal_notice"": ""©1997-2022 NetEase, lnc. All Rights Reserved."",
-            ""genres"": [
-                {
-                    ""id"": ""1"",
-                    ""description"": ""Action""
-                },
-                {
-                    ""id"": ""25"",
-                    ""description"": ""Adventure""
-                },
-                {
-                    ""id"": ""3"",
-                    ""description"": ""RPG""
-                },
-                {
-                    ""id"": ""28"",
-                    ""description"": ""Simulation""
-                },
-                {
-                    ""id"": ""2"",
-                    ""description"": ""Strategy""
-                },
-                {
-                    ""id"": ""37"",
-                    ""description"": ""Free to Play""
-                }
-            ],
-            ""release_date"": {
-                ""coming_soon"": false,
-                ""date"": ""9 Jul, 2024""
+        int[] appIds = [2139460, 1245620, 431960, 271590];
+
+        foreach (var appId in appIds)
+        {
+            var game = await CreateGameObjFromJson(appId);
+            if (game != null)
+            {
+                await context.AddAsync(game);
             }
         }
-    },
-    ""1245620"": {
+        await context.SaveChangesAsync();
+    }
+    public static string InitializeDbFromSteamApi(int appId)
+    {
+        return appId switch
+        {
+            2139460 => @"{
+            ""2139460"": {
+                ""success"": true,
+                ""data"": {
+                    ""type"": ""game"",
+                    ""name"": ""Once Human"",
+                    ""steam_appid"": 2139460,
+                    ""required_age"": 0,
+                    ""is_free"": true,
+                    ""detailed_description"": ""<h1>Join our Discord!</h1><p><a href=\""https://steamcommunity.com/linkfilter/?u=https%3A%2F%2Fdiscord.gg%2Foncehuman\"" target=\""_blank\"" rel=\"" noopener\""  ><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/discord引流.jpg?t=1720769375\"" /></a></p><br><h1>About the Game</h1>The apocalypse changed everything. Human, animal, plant… all are infested by an alien creature – Stardust. As a Meta-Human, you can survive the contamination and use the power of Stardust. Play alone or join others to fight, build and explore. When the world is in chaos, you are our last hope.<h2 class=\""bb_tag\""><strong>Survive in the wilderness</strong></h2>You wake up in the middle of nowhere. You'll have to brace yourself for the cruelty of nature (from monsters to lack of food); however, Stardust's influence does not restrict to living things, it also affects the soil and water. Eating polluted food and drinking dirty water will reduce your Sanity. When your Sanity drops, your max HP would drop accordingly. To eat or not to eat, it's a question.<br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF1-开放世界_末日.gif?t=1720769375\"" /><h2 class=\""bb_tag\""><strong>Fight against monsters</strong></h2>Battle numerous enemies that are once human, and challenge bosses from another dimension to gain powerful items and ease Stardust pollution. You are not only fighting for yourself, but also fighting for the survivors. <br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF2-PVE.gif?t=1720769375\"" /><h2 class=\""bb_tag\""><strong>Customize weapons</strong></h2>With about 100 gun blueprints divided into seven categories for you to collect and craft, every loot grants you something new. Did I mention accessories and gun perks? Right, they are the heroes here. If our current weapon cannot satisfy your need, you can add different parts and perks, upgrade your firearm to your heart's content.  <br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF3-枪械武器装备（英）.gif?t=1720769375\"" /><h2 class=\""bb_tag\""><strong>Build territory</strong></h2>Use Territory Core to build a house of your own. You can keep a practical style, jamming everything needed in a small room; or you can design a townhouse with a patio, kitchen, garage… The best part is, you can relocate your territory any time you want! <br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF4-基地建设.gif?t=1720769375\"" /><h2 class=\""bb_tag\""><strong>Find out the truth</strong></h2>Delve into the truth of Stardust, find out where it came from, and what it wants. In the journey of seeking truth, you may feel alone, but you are never alone. There are several factions in the world, some can be violent and hostile, others might be friendly and helpful. Explore human settlements to learn their stories or exterminate bosses without leaving a name for survivors to praise, the choices are yours.<br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF5-大型多人在线.gif?t=1720769375\"" />"",
+                    ""about_the_game"": ""The apocalypse changed everything. Human, animal, plant… all are infested by an alien creature – Stardust. As a Meta-Human, you can survive the contamination and use the power of Stardust. Play alone or join others to fight, build and explore. When the world is in chaos, you are our last hope.<h2 class=\""bb_tag\""><strong>Survive in the wilderness</strong></h2>You wake up in the middle of nowhere. You'll have to brace yourself for the cruelty of nature (from monsters to lack of food); however, Stardust's influence does not restrict to living things, it also affects the soil and water. Eating polluted food and drinking dirty water will reduce your Sanity. When your Sanity drops, your max HP would drop accordingly. To eat or not to eat, it's a question.<br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF1-开放世界_末日.gif?t=1720769375\"" /><h2 class=\""bb_tag\""><strong>Fight against monsters</strong></h2>Battle numerous enemies that are once human, and challenge bosses from another dimension to gain powerful items and ease Stardust pollution. You are not only fighting for yourself, but also fighting for the survivors. <br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF2-PVE.gif?t=1720769375\"" /><h2 class=\""bb_tag\""><strong>Customize weapons</strong></h2>With about 100 gun blueprints divided into seven categories for you to collect and craft, every loot grants you something new. Did I mention accessories and gun perks? Right, they are the heroes here. If our current weapon cannot satisfy your need, you can add different parts and perks, upgrade your firearm to your heart's content.  <br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF3-枪械武器装备（英）.gif?t=1720769375\"" /><h2 class=\""bb_tag\""><strong>Build territory</strong></h2>Use Territory Core to build a house of your own. You can keep a practical style, jamming everything needed in a small room; or you can design a townhouse with a patio, kitchen, garage… The best part is, you can relocate your territory any time you want! <br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF4-基地建设.gif?t=1720769375\"" /><h2 class=\""bb_tag\""><strong>Find out the truth</strong></h2>Delve into the truth of Stardust, find out where it came from, and what it wants. In the journey of seeking truth, you may feel alone, but you are never alone. There are several factions in the world, some can be violent and hostile, others might be friendly and helpful. Explore human settlements to learn their stories or exterminate bosses without leaving a name for survivors to praise, the choices are yours.<br><br><br><img src=\""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/extras/GIF5-大型多人在线.gif?t=1720769375\"" />"",
+                    ""short_description"": ""Once Human is a multiplayer open-world survival game set in a strange, post-apocalyptic future. Unite with friends to fight monstrous enemies, uncover secret plots, compete for resources, and build your own territory. Once, you were merely human. Now, you have the power to remake the world."",
+                    ""supported_languages"": ""English<strong>*</strong>, Simplified Chinese<strong>*</strong>, French, German, Japanese, Korean, Traditional Chinese<br><strong>*</strong>languages with full audio support"",
+                    ""header_image"": ""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/header.jpg?t=1720769375"",
+                    ""capsule_image"": ""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/capsule_231x87.jpg?t=1720769375"",
+                    ""capsule_imagev5"": ""https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/capsule_184x69.jpg?t=1720769375"",
+                    ""website"": ""https://t.co/gRX2BR4tj9"",
+                    ""pc_requirements"": {
+                        ""minimum"": ""<strong>Minimum:</strong><br><ul class=\""bb_ul\""><li><strong>OS:</strong> Windows 10 64-bit Operating System<br></li><li><strong>Processor:</strong> Intel Core i5-4460<br></li><li><strong>Memory:</strong> 8 GB RAM<br></li><li><strong>Graphics:</strong> Nvidia GTX 750ti 4G / AMD Radeon RX550<br></li><li><strong>DirectX:</strong> Version 11<br></li><li><strong>Network:</strong> Broadband Internet connection<br></li><li><strong>Storage:</strong> 55 GB available space<br></li><li><strong>Additional Notes:</strong> SSD is highly recommended</li></ul>"",
+                        ""recommended"": ""<strong>Recommended:</strong><br><ul class=\""bb_ul\""><li><strong>OS:</strong> Windows 10 64-bit Operating System<br></li><li><strong>Processor:</strong> Intel Core i7-7700<br></li><li><strong>Memory:</strong> 16 GB RAM<br></li><li><strong>Graphics:</strong> Nvidia GTX 1060 6G / AMD Radeon RX 580 2304SP / Intel ARC A380<br></li><li><strong>DirectX:</strong> Version 11<br></li><li><strong>Network:</strong> Broadband Internet connection<br></li><li><strong>Storage:</strong> 55 GB available space<br></li><li><strong>Additional Notes:</strong> SSD is highly recommended</li></ul>""
+                    },
+                    ""mac_requirements"": [],
+                    ""linux_requirements"": [],
+                    ""legal_notice"": ""©1997-2022 NetEase, lnc. All Rights Reserved."",
+                    ""genres"": [
+                        {
+                            ""id"": ""1"",
+                            ""description"": ""Action""
+                        },
+                        {
+                            ""id"": ""25"",
+                            ""description"": ""Adventure""
+                        },
+                        {
+                            ""id"": ""3"",
+                            ""description"": ""RPG""
+                        },
+                        {
+                            ""id"": ""28"",
+                            ""description"": ""Simulation""
+                        },
+                        {
+                            ""id"": ""2"",
+                            ""description"": ""Strategy""
+                        },
+                        {
+                            ""id"": ""37"",
+                            ""description"": ""Free to Play""
+                        }
+                    ],
+                    ""release_date"": {
+                        ""coming_soon"": false,
+                        ""date"": ""9 Jul, 2024""
+                    }
+                }
+            }
+        }",
+            1245620 => @"{
+""1245620"": {
         ""success"": true,
         ""data"": {
             ""type"": ""game"",
@@ -132,8 +150,10 @@ public static class DbInitializer
                 ""date"": ""24 Feb, 2022""
             }
         }
-    },
-    ""431960"": {
+    }
+}",
+            431960 => @"{
+""431960"": {
         ""success"": true,
         ""data"": {
             ""type"": ""game"",
@@ -198,8 +218,10 @@ public static class DbInitializer
                 ""date"": ""Nov 2018""
             }
         }
-    },
-    ""271590"": {
+    }
+}",
+            271590 => @"{
+""271590"": {
         ""success"": true,
         ""data"": {
             ""type"": ""game"",
@@ -253,40 +275,58 @@ public static class DbInitializer
             }
         }
     }
-}
-";
-
-
-        var options = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true,
-            //DefaultBufferSize = 16384 
+}",
+            _ => @"{
+    POOP: { POOP : POOP }
+}"
         };
+    }
 
-        try
+
+    public static async Task<Game> CreateGameObjFromJson(int appId)
+    {
+        //using var client = new HttpClient();
+        //var response = await client.GetStringAsync($"https://store.steampowered.com/api/appdetails?appids={appId}");
+        var response = InitializeDbFromSteamApi(appId);
+
+        var settings = new JsonSerializerSettings();
+        //settings.Converters.Add(new AppDetailsResponseConverter());
+        var data = JsonConvert.DeserializeObject<AppDetailsContainer>(response);
+
+        var gameData = data.Data;
+
+        return new Game
         {
-            var gamesDictionary = JsonSerializer.Deserialize<Dictionary<string, GameData>>(jsonString, options);
-            var gameLibraries = new List<GameLibrary>();
-
-            foreach (var game in gamesDictionary.Values)
-            {
-                if (game.Success && game.Data != null)
-                {
-                    gameLibraries.Add(game.Data);
-                }
-            }
-
-            // Now you can work with the list of GameLibrary objects
-            foreach (var game in gameLibraries)
-            {
-                context.GameLibraries.Add(game);
-            }
-
-            await context.SaveChangesAsync();
-        }
-        catch (JsonException e)
-        {
-            Console.WriteLine($"JSON deserialization error: {e.Message}");
-        }
+            Type = gameData?.Type ?? "",
+            Name = gameData?.Name ?? "",
+            SteamAppId = gameData?.SteamAppid,
+            RequiredAge = gameData?.RequiredAge,
+            IsFree = gameData?.IsFree,
+            DetailedDescription = gameData?.DetailedDescription ?? "",
+            AboutTheGame = gameData?.AboutTheGame ?? "",
+            ShortDescription = gameData?.ShortDescription ?? "",
+            SupportedLanguages = gameData?.SupportedLanguages ?? "",
+            HeaderImage = gameData?.HeaderImage ?? "",
+            Website = gameData?.Website ?? "",
+            PcRequirements = gameData?.PcRequirements != null ? JsonConvert.SerializeObject(gameData.PcRequirements) : "",
+            MacRequirements = gameData?.MacRequirements != null ? JsonConvert.SerializeObject(gameData.MacRequirements) : "",
+            LinuxRequirements = gameData?.LinuxRequirements != null ? JsonConvert.SerializeObject(gameData.LinuxRequirements) : "",
+            Developers = gameData?.Developers != null ? string.Join(", ", gameData.Developers) : string.Empty,
+            Publishers = gameData?.Publishers != null ? string.Join(", ", gameData.Publishers) : string.Empty,
+            Categories = gameData?.Categories != null ? string.Join(", ", gameData.Categories.Select(c => c.Description)) : string.Empty,
+            Genres = gameData?.Genres != null ? string.Join(", ", gameData.Genres.Select(g => g.Description)) : string.Empty,
+            Screenshots = gameData?.Screenshots != null ? string.Join(", ", gameData.Screenshots.Select(s => s.PathFull)) : string.Empty,
+            Movies = gameData?.Movies != null ? string.Join(", ", gameData.Movies.Select(m => m.Name)) : string.Empty,
+            Platforms = gameData?.Platforms != null ? $"Windows: {gameData.Platforms.Windows}, Mac: {gameData.Platforms.Mac}, Linux: {gameData.Platforms.Linux}" : string.Empty,
+            MetacriticScore = gameData?.Metacritic?.Score,
+            MetacriticUrl = gameData?.Metacritic?.Url ?? "",
+            TotalRecommendations = gameData?.Recommendations?.Total ?? 0,
+            TotalAchievements = gameData?.Achievements?.Total ?? 0,
+            ReleaseDate = gameData?.ReleaseDate != null ? JsonConvert.SerializeObject(gameData.ReleaseDate.Date) : "",
+            ComingSoon = gameData?.ReleaseDate?.ComingSoon,
+            SupportInfo = gameData?.SupportInfo != null ? $"{gameData.SupportInfo.Url}, {gameData.SupportInfo.Email}" : "",
+            Background = gameData?.Background ?? "",
+            ContentDescriptors = gameData?.ContentDescriptors != null ? string.Join(", ", gameData.ContentDescriptors.Ids) : string.Empty
+        };
     }
 }

@@ -55,82 +55,107 @@ namespace ASPProjectBackend.Data.Migrations
                     b.ToTable("Addresses");
                 });
 
-            modelBuilder.Entity("ASPProjectBackend.Models.GameLibrary", b =>
+            modelBuilder.Entity("ASPProjectBackend.Models.Game", b =>
                 {
-                    b.Property<long>("SteamAppid")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Relational:JsonPropertyName", "steam_appid");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("SteamAppid"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AboutTheGame")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "about_the_game");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CapsuleImage")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "capsule_image");
+                    b.Property<string>("Background")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CapsuleImagev5")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "capsule_imagev5");
+                    b.Property<string>("Categories")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ControllerSupport")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "controller_support");
+                    b.Property<bool?>("ComingSoon")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ContentDescriptors")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DetailedDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "detailed_description");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Developers")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Genres")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HeaderImage")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "header_image");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsFree")
-                        .HasColumnType("bit")
-                        .HasAnnotation("Relational:JsonPropertyName", "is_free");
+                    b.Property<bool?>("IsFree")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LinuxRequirements")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MacRequirements")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("MetacriticScore")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MetacriticUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Movies")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "name");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RequiredAge")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "required_age");
+                    b.Property<string>("PcRequirements")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Platforms")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Publishers")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReleaseDate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RequiredAge")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Screenshots")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShortDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "short_description");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SteamAppId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SupportInfo")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SupportedLanguages")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "supported_languages");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TotalAchievements")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TotalRecommendations")
+                        .HasColumnType("int");
 
                     b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "type");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Website")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasAnnotation("Relational:JsonPropertyName", "website");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("SteamAppid");
+                    b.HasKey("Id");
 
-                    b.ToTable("GameLibraries");
+                    b.ToTable("Games");
                 });
 
             modelBuilder.Entity("ASPProjectBackend.Models.Order", b =>
@@ -452,204 +477,6 @@ namespace ASPProjectBackend.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("ASPProjectBackend.Models.GameLibrary", b =>
-                {
-                    b.OwnsMany("ASPProjectBackend.Models.Genre", "Genres", b1 =>
-                        {
-                            b1.Property<long>("GameLibrarySteamAppid")
-                                .HasColumnType("bigint");
-
-                            b1.Property<string>("Id")
-                                .HasColumnType("nvarchar(450)")
-                                .HasAnnotation("Relational:JsonPropertyName", "id");
-
-                            b1.Property<string>("Description")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasAnnotation("Relational:JsonPropertyName", "description");
-
-                            b1.HasKey("GameLibrarySteamAppid", "Id");
-
-                            b1.ToTable("Genre");
-
-                            b1.HasAnnotation("Relational:JsonPropertyName", "genres");
-
-                            b1.WithOwner()
-                                .HasForeignKey("GameLibrarySteamAppid");
-                        });
-
-                    b.OwnsOne("ASPProjectBackend.Models.Metacritic", "Metacritic", b1 =>
-                        {
-                            b1.Property<long>("GameLibrarySteamAppid")
-                                .HasColumnType("bigint");
-
-                            b1.Property<long>("Score")
-                                .HasColumnType("bigint")
-                                .HasAnnotation("Relational:JsonPropertyName", "score");
-
-                            b1.Property<string>("Url")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasAnnotation("Relational:JsonPropertyName", "url");
-
-                            b1.HasKey("GameLibrarySteamAppid");
-
-                            b1.ToTable("GameLibraries");
-
-                            b1.HasAnnotation("Relational:JsonPropertyName", "metacritic");
-
-                            b1.WithOwner()
-                                .HasForeignKey("GameLibrarySteamAppid");
-                        });
-
-                    b.OwnsOne("ASPProjectBackend.Models.PcRequirements", "PcRequirements", b1 =>
-                        {
-                            b1.Property<long>("GameLibrarySteamAppid")
-                                .HasColumnType("bigint");
-
-                            b1.Property<string>("Minimum")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasAnnotation("Relational:JsonPropertyName", "minimum");
-
-                            b1.Property<string>("Recommended")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasAnnotation("Relational:JsonPropertyName", "recommended");
-
-                            b1.HasKey("GameLibrarySteamAppid");
-
-                            b1.ToTable("GameLibraries");
-
-                            b1.HasAnnotation("Relational:JsonPropertyName", "pc_requirements");
-
-                            b1.WithOwner()
-                                .HasForeignKey("GameLibrarySteamAppid");
-                        });
-
-                    b.OwnsOne("ASPProjectBackend.Models.PriceOverview", "PriceOverview", b1 =>
-                        {
-                            b1.Property<long>("GameLibrarySteamAppid")
-                                .HasColumnType("bigint");
-
-                            b1.Property<string>("Currency")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasAnnotation("Relational:JsonPropertyName", "currency");
-
-                            b1.Property<long>("DiscountPercent")
-                                .HasColumnType("bigint")
-                                .HasAnnotation("Relational:JsonPropertyName", "discount_percent");
-
-                            b1.Property<long>("Final")
-                                .HasColumnType("bigint")
-                                .HasAnnotation("Relational:JsonPropertyName", "final");
-
-                            b1.Property<string>("FinalFormatted")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasAnnotation("Relational:JsonPropertyName", "final_formatted");
-
-                            b1.Property<long>("Initial")
-                                .HasColumnType("bigint")
-                                .HasAnnotation("Relational:JsonPropertyName", "initial");
-
-                            b1.Property<string>("InitialFormatted")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasAnnotation("Relational:JsonPropertyName", "initial_formatted");
-
-                            b1.HasKey("GameLibrarySteamAppid");
-
-                            b1.ToTable("GameLibraries");
-
-                            b1.HasAnnotation("Relational:JsonPropertyName", "price_overview");
-
-                            b1.WithOwner()
-                                .HasForeignKey("GameLibrarySteamAppid");
-                        });
-
-                    b.OwnsOne("ASPProjectBackend.Models.ReleaseDate", "ReleaseDate", b1 =>
-                        {
-                            b1.Property<long>("GameLibrarySteamAppid")
-                                .HasColumnType("bigint");
-
-                            b1.Property<bool>("ComingSoon")
-                                .HasColumnType("bit")
-                                .HasAnnotation("Relational:JsonPropertyName", "coming_soon");
-
-                            b1.Property<string>("Date")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasAnnotation("Relational:JsonPropertyName", "date");
-
-                            b1.HasKey("GameLibrarySteamAppid");
-
-                            b1.ToTable("GameLibraries");
-
-                            b1.HasAnnotation("Relational:JsonPropertyName", "release_date");
-
-                            b1.WithOwner()
-                                .HasForeignKey("GameLibrarySteamAppid");
-                        });
-
-                    b.OwnsOne("System.Collections.Generic.List<ASPProjectBackend.Models.LinuxRequirements>", "LinuxRequirements", b1 =>
-                        {
-                            b1.Property<long>("GameLibrarySteamAppid")
-                                .HasColumnType("bigint");
-
-                            b1.Property<int>("Capacity")
-                                .HasColumnType("int");
-
-                            b1.HasKey("GameLibrarySteamAppid");
-
-                            b1.ToTable("GameLibraries");
-
-                            b1.HasAnnotation("Relational:JsonPropertyName", "linux_requirements");
-
-                            b1.WithOwner()
-                                .HasForeignKey("GameLibrarySteamAppid");
-                        });
-
-                    b.OwnsOne("System.Collections.Generic.List<ASPProjectBackend.Models.MacRequirements>", "MacRequirements", b1 =>
-                        {
-                            b1.Property<long>("GameLibrarySteamAppid")
-                                .HasColumnType("bigint");
-
-                            b1.Property<int>("Capacity")
-                                .HasColumnType("int");
-
-                            b1.HasKey("GameLibrarySteamAppid");
-
-                            b1.ToTable("GameLibraries");
-
-                            b1.HasAnnotation("Relational:JsonPropertyName", "mac_requirements");
-
-                            b1.WithOwner()
-                                .HasForeignKey("GameLibrarySteamAppid");
-                        });
-
-                    b.Navigation("Genres");
-
-                    b.Navigation("LinuxRequirements")
-                        .IsRequired();
-
-                    b.Navigation("MacRequirements")
-                        .IsRequired();
-
-                    b.Navigation("Metacritic")
-                        .IsRequired();
-
-                    b.Navigation("PcRequirements")
-                        .IsRequired();
-
-                    b.Navigation("PriceOverview")
-                        .IsRequired();
-
-                    b.Navigation("ReleaseDate")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("ASPProjectBackend.Models.Order", b =>

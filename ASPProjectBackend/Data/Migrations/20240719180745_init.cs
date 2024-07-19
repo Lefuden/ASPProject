@@ -43,16 +43,45 @@ namespace ASPProjectBackend.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GameLibraries",
+                name: "Games",
                 columns: table => new
                 {
-                    GameLibraryId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    appId = table.Column<int>(type: "int", nullable: false)
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SteamAppId = table.Column<int>(type: "int", nullable: false),
+                    RequiredAge = table.Column<int>(type: "int", nullable: false),
+                    IsFree = table.Column<bool>(type: "bit", nullable: false),
+                    DetailedDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AboutTheGame = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ShortDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SupportedLanguages = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HeaderImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Website = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PcRequirements = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MacRequirements = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LinuxRequirements = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Developers = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Publishers = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Categories = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Genres = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Screenshots = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Movies = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Platforms = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MetacriticScore = table.Column<int>(type: "int", nullable: true),
+                    MetacriticUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TotalRecommendations = table.Column<int>(type: "int", nullable: false),
+                    TotalAchievements = table.Column<int>(type: "int", nullable: false),
+                    ReleaseDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ComingSoon = table.Column<bool>(type: "bit", nullable: false),
+                    SupportInfo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Background = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContentDescriptors = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GameLibraries", x => x.GameLibraryId);
+                    table.PrimaryKey("PK_Games", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -366,7 +395,7 @@ namespace ASPProjectBackend.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "GameLibraries");
+                name: "Games");
 
             migrationBuilder.DropTable(
                 name: "OrderProducts");
