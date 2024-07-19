@@ -1,16 +1,13 @@
 using ASPProjectFrontend.Models;
+using ASPProjectFrontend.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace ASPProjectFrontend.Controllers;
-public class HomeController : Controller
+public class HomeController(ApiServices apiServices, ILogger<HomeController> logger) : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
-    {
-        _logger = logger;
-    }
+    private readonly ApiServices _api = apiServices;
+    private readonly ILogger<HomeController> _logger = logger;
 
     public IActionResult Index()
     {

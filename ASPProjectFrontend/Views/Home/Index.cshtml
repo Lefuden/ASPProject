@@ -1,21 +1,14 @@
 ﻿@using System.Security.Claims
 @inject IHttpContextAccessor HttpContextAccessor
 @{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
+	var auth = HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
+	var admin = HttpContextAccessor.HttpContext.User.IsInRole("Admin");
+	var email = HttpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 }
 <div class="text-center">
-	@if (!HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
-	{
-		<a asp-action="SignInWithGoogle" asp-controller="Authentication" class="btn btn-primary">
-			<i class="fa-brands fa-google"></i>
-		Login with Google
-		</a>
-	}
-	else
-	{
-		var email = HttpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
-		<p>Email: @email</p>
-		<br/>
-		<a asp-action="Logout" asp-controller="Account" class="btn btn-danger">Logout</a>
-	}
+	
+	
+	
+	
 </div>
