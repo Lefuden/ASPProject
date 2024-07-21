@@ -1,7 +1,8 @@
-﻿@using System.Security.Claims
+﻿@model List<Game>;
+@using System.Security.Claims
 @inject IHttpContextAccessor HttpContextAccessor
 @{
-	ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Store";
 	var auth = HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
 	var admin = HttpContextAccessor.HttpContext.User.IsInRole("Admin");
 	var email = HttpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
@@ -9,6 +10,23 @@
 <div class="text-center">
 	
 	
-	
+	<div class="container mt-5">
+        <div class="row">
+            <div class="col-md-4">
+              @foreach(var game in Model){
+                Html.Partial("_GameCard", game);
+              }
+                @* @Html.Partial("_GameCard", new Game
+                {
+                    Id = 1,
+                    Name = "Example Game",
+                    ShortDescription = "This is a short description of the example game.",
+                    HeaderImage = "path-to-image.jpg",
+                    InitialPrice = 59,
+                    DiscountPercent = 20
+                }) *@
+            </div>
+        </div>
+    </div>
 	
 </div>
