@@ -15,6 +15,8 @@ public static class DbInitializer
         }
 
         int[] appIds = [2139460, 1245620, 431960, 271590];
+        //int[] appIds = [2923300, 2074920];
+
 
         foreach (var appId in appIds)
         {
@@ -285,8 +287,8 @@ public static class DbInitializer
 
     public static async Task<Game> CreateGameObjFromJson(int appId)
     {
-        //using var client = new HttpClient();
-        //var response = await client.GetStringAsync($"https://store.steampowered.com/api/appdetails?appids={appId}");
+        using var client = new HttpClient();
+        //var response = await client.GetStringAsync($"https://store.steampowered.com/api/appdetails?appids={appId}&cc=se&filters=basic,price_overview,metacritic,genres,release_date");
         var response = InitializeDbFromSteamApi(appId);
 
         var settings = new JsonSerializerSettings();
@@ -326,7 +328,9 @@ public static class DbInitializer
             ComingSoon = gameData?.ReleaseDate?.ComingSoon,
             SupportInfo = gameData?.SupportInfo != null ? $"{gameData.SupportInfo.Url}, {gameData.SupportInfo.Email}" : "",
             Background = gameData?.Background ?? "",
-            ContentDescriptors = gameData?.ContentDescriptors != null ? string.Join(", ", gameData.ContentDescriptors.Ids) : string.Empty
+            ContentDescriptors = gameData?.ContentDescriptors != null ? string.Join(", ", gameData.ContentDescriptors.Ids) : string.Empty,
+            InitialPrice = gameData?.PriceOverview?.Initial ?? 0,
+            DiscountPercent = gameData?.PriceOverview?.DiscountPercent ?? 0
         };
     }
 }
