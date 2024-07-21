@@ -4,6 +4,7 @@ using ASPProjectBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASPProjectBackend.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240720114825_updated gamelibrary")]
+    partial class updatedgamelibrary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,17 +87,11 @@ namespace ASPProjectBackend.Data.Migrations
                     b.Property<string>("Developers")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float?>("DiscountPercent")
-                        .HasColumnType("real");
-
                     b.Property<string>("Genres")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HeaderImage")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("InitialPrice")
-                        .HasColumnType("bigint");
 
                     b.Property<bool?>("IsFree")
                         .HasColumnType("bit");
