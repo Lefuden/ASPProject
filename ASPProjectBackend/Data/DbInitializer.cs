@@ -15,7 +15,6 @@ public static class DbInitializer
         }
 
         int[] appIds = [2139460, 1245620, 431960, 271590];
-        //int[] appIds = [2923300, 2074920];
 
 
         foreach (var appId in appIds)
@@ -288,12 +287,17 @@ public static class DbInitializer
     public static async Task<Game> CreateGameObjFromJson(int appId)
     {
         using var client = new HttpClient();
+        var random = new Random();
         //var response = await client.GetStringAsync($"https://store.steampowered.com/api/appdetails?appids={appId}&cc=se&filters=basic,price_overview,metacritic,genres,release_date");
         var response = InitializeDbFromSteamApi(appId);
 
         var settings = new JsonSerializerSettings();
         //settings.Converters.Add(new AppDetailsResponseConverter());
         var data = JsonConvert.DeserializeObject<AppDetailsContainer>(response);
+        if (data == null)
+        {
+            return default;
+        }
 
         var gameData = data.Data;
 
@@ -301,7 +305,7 @@ public static class DbInitializer
         {
             Type = gameData?.Type ?? "",
             Name = gameData?.Name ?? "",
-            SteamAppId = gameData?.SteamAppid,
+            SteamAppId = gameData!.SteamAppid,
             RequiredAge = gameData?.RequiredAge,
             IsFree = gameData?.IsFree,
             DetailedDescription = gameData?.DetailedDescription ?? "",
@@ -330,7 +334,8 @@ public static class DbInitializer
             Background = gameData?.Background ?? "",
             ContentDescriptors = gameData?.ContentDescriptors != null ? string.Join(", ", gameData.ContentDescriptors.Ids) : string.Empty,
             InitialPrice = gameData?.PriceOverview?.Initial ?? 0,
-            DiscountPercent = gameData?.PriceOverview?.DiscountPercent ?? 0
+            DiscountPercent = gameData?.PriceOverview?.DiscountPercent ?? 0,
+            Stock = (byte)random.Next(5, 73)
         };
     }
 }

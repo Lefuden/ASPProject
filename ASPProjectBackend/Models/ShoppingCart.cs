@@ -6,6 +6,5 @@ public class ShoppingCart
     public int UserId { get; set; }
     //public User User { get; set; }
     //public ICollection<ShoppingCartProduct> ShoppingCartProducts { get; set; }
-    public ICollection<Product> Products { get; set; } = [];
-
+    public ICollection<Game> Games { get; set; } = [];
 }

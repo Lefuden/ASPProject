@@ -10,8 +10,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Address> Addresses { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Order> Orders { get; set; }
-    public DbSet<OrderProduct> OrderProducts { get; set; }
-    public DbSet<Product> Products { get; set; }
+    public DbSet<OrderGame> OrderGames { get; set; }
     public DbSet<Game> Games { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -22,16 +21,16 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .Property(o => o.TotalOrderPrice)
             .HasColumnType("decimal(18,2)");
 
-        modelBuilder.Entity<OrderProduct>()
+        modelBuilder.Entity<OrderGame>()
             .Property(op => op.TotalPrice)
             .HasColumnType("decimal(18,2)");
 
-        modelBuilder.Entity<OrderProduct>()
+        modelBuilder.Entity<OrderGame>()
             .Property(op => op.UnitPrice)
             .HasColumnType("decimal(18,2)");
 
-        modelBuilder.Entity<Product>()
-            .Property(p => p.Price)
+        modelBuilder.Entity<Game>()
+            .Property(p => p.InitialPrice)
             .HasColumnType("decimal(18,2)");
 
         modelBuilder.Entity<Order>()

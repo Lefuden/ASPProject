@@ -2,13 +2,13 @@
 
 namespace ASPProjectBackend.Models;
 
-public class OrderProduct
+public class OrderGame
 {
-    public int OrderProductId { get; set; }
+    public int OrderGameId { get; set; }
     public int OrderId { get; set; }
     public Order Order { get; set; }
-    public int ProductId { get; set; }
-    public Product Product { get; set; }
+    public int GameId { get; set; }
+    public Game Game { get; set; }
 
     [Range(1, byte.MaxValue, ErrorMessage = "Quantity must be atleast 1.")]
     public byte Quantity { get; set; }

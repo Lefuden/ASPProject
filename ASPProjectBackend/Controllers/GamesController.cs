@@ -60,6 +60,7 @@ namespace ASPProjectBackend.Controllers
                 game.ReleaseDate = gameDto.ReleaseDate;
                 game.InitialPrice = gameDto.InitialPrice;
                 game.DiscountPercent = gameDto.DiscountPercent;
+                game.Stock = gameDto.Stock;
 
                 context.Update(game);
                 await context.SaveChangesAsync();
@@ -120,7 +121,8 @@ namespace ASPProjectBackend.Controllers
             MetacriticScore = game.MetacriticScore,
             ReleaseDate = game.ReleaseDate,
             InitialPrice = game.InitialPrice,
-            DiscountPercent = game.DiscountPercent
+            DiscountPercent = game.DiscountPercent,
+            Stock = game.Stock
         };
     }
 }

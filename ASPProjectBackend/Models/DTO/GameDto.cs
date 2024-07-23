@@ -3,8 +3,8 @@
 public class GameDto
 {
     public int Id { get; set; }
-    public string? Name { get; set; }
-    public uint? SteamAppId { get; set; }
+    public string Name { get; set; }
+    public uint SteamAppId { get; set; }
     public string? AboutTheGame { get; set; }
     public string? ShortDescription { get; set; }
     public string? HeaderImage { get; set; }
@@ -16,7 +16,9 @@ public class GameDto
     public uint? MetacriticScore { get; set; }
     public string? ReleaseDate { get; set; }
     public uint? InitialPrice { get; set; }
-    public float? DiscountPercent { get; set; }
+    public float DiscountPercent { get; set; }
+    public byte Stock { get; set; }
+
 
     //public string? Type { get; set; }
     //public uint? RequiredAge { get; set; }

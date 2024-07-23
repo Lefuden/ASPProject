@@ -15,7 +15,7 @@ public class Order
     public int BillingAddressId { get; set; }
     public Address BillingAddress { get; set; }
 
-    public ICollection<OrderProduct> Products { get; set; } = [];
+    public ICollection<OrderGame> Games { get; set; } = [];
 }
 
 

@@ -20,9 +20,9 @@
                             <h2 class="game-title">@game.Name</h2>
                             <p class="game-short-description">@game.ShortDescription</p>
                             <p class="game-price">
-                                @if (game.DiscountPercent.HasValue && game.DiscountPercent > 0)
+                                @if (game.DiscountPercent != 1.00f)
                                 {
-                                    var discountedPrice = game.InitialPrice * (1 - game.DiscountPercent.Value / 100);
+                                    var discountedPrice = game.InitialPrice * (1 - game.DiscountPercent / 100);
                                     <span class="original-price">@game.InitialPrice.Value.ToString("C")</span>
                                     <span class="discounted-price">@discountedPrice.Value.ToString("C")</span>
                                 }

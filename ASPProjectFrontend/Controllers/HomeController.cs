@@ -11,8 +11,7 @@ public class HomeController(ApiServices apiServices, ILogger<HomeController> log
 
     public async Task<IActionResult> Index()
     {
-        var games = await _api.GetAllGames();
-        return View(games);
+        return View(await _api.GetAllGames());
     }
 
     public IActionResult Privacy()
