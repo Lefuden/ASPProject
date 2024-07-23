@@ -1,20 +1,18 @@
 using ASPProjectFrontend.Models;
+using ASPProjectFrontend.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace ASPProjectFrontend.Controllers;
-public class HomeController : Controller
+public class HomeController(ApiServices apiServices, ILogger<HomeController> logger) : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ApiServices _api = apiServices;
+    private readonly ILogger<HomeController> _logger = logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public async Task<IActionResult> Index()
     {
-        _logger = logger;
-    }
-
-    public IActionResult Index()
-    {
-        return View();
+        var games = await _api.GetAllGames();
+        return View(games);
     }
 
     public IActionResult Privacy()

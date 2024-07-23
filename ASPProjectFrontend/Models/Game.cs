@@ -1,4 +1,4 @@
-﻿namespace ASPProjectFrontend.Models;
+namespace ASPProjectFrontend.Models;
 
 public class Game
 {
