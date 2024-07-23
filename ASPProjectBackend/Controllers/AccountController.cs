@@ -20,10 +20,10 @@ public class AccountController(ApplicationDbContext context) : ControllerBase
 
             if (user == null)
             {
-                Console.WriteLine("User not found");
+                //Console.WriteLine("User not found");
                 return BadRequest();
             }
-            Console.WriteLine("User found!");
+            //Console.WriteLine("User found!");
 
             _context.Add(updateAddress.Address);
             await context.SaveChangesAsync();
