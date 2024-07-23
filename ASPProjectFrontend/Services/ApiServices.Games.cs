@@ -17,4 +17,10 @@ public partial class ApiServices
         var games = JsonConvert.DeserializeObject<List<Game>>(jsonResponse);
         return games!;
     }
+
+    public async Task<bool> EditGame(Game updateGame)
+    {
+        var response = await _client.PostAsJsonAsync("Games/Edit", updateGame);
+        return response.IsSuccessStatusCode;
+    }
 }

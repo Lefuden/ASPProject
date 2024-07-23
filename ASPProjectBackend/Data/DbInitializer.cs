@@ -1,37 +1,36 @@
 ﻿using ASPProjectBackend.Models;
 using ASPProjectBackend.Models.DTO;
-using ASPProjectBackend.Services;
 using Newtonsoft.Json;
 
 namespace ASPProjectBackend.Data;
 
 public static class DbInitializer
 {
-    public static async Task Init(ApplicationDbContext context, ApiServices api)
-    {
-        if (context.Games.Any())
-        {
-            return;
-        }
+	public static async Task Init(ApplicationDbContext context)
+	{
+		if (context.Games.Any())
+		{
+			return;
+		}
 
-        int[] appIds = [2139460, 1245620, 431960, 271590];
+		int[] appIds = [2139460, 1245620, 431960, 271590];
 
 
-        foreach (var appId in appIds)
-        {
-            var game = await CreateGameObjFromJson(appId);
-            if (game != null)
-            {
-                await context.AddAsync(game);
-            }
-        }
-        await context.SaveChangesAsync();
-    }
-    public static string InitializeDbFromSteamApi(int appId)
-    {
-        return appId switch
-        {
-            2139460 => @"{
+		foreach (var appId in appIds)
+		{
+			var game = await CreateGameObjFromJson(appId);
+			if (game != null)
+			{
+				await context.AddAsync(game);
+			}
+		}
+		await context.SaveChangesAsync();
+	}
+	public static string InitializeDbFromSteamApi(int appId)
+	{
+		return appId switch
+		{
+			2139460 => @"{
             ""2139460"": {
                 ""success"": true,
                 ""data"": {
@@ -88,7 +87,7 @@ public static class DbInitializer
                 }
             }
         }",
-            1245620 => @"{
+			1245620 => @"{
 ""1245620"": {
         ""success"": true,
         ""data"": {
@@ -153,7 +152,7 @@ public static class DbInitializer
         }
     }
 }",
-            431960 => @"{
+			431960 => @"{
 ""431960"": {
         ""success"": true,
         ""data"": {
@@ -221,7 +220,7 @@ public static class DbInitializer
         }
     }
 }",
-            271590 => @"{
+			271590 => @"{
 ""271590"": {
         ""success"": true,
         ""data"": {
@@ -277,65 +276,65 @@ public static class DbInitializer
         }
     }
 }",
-            _ => @"{
+			_ => @"{
     POOP: { POOP : POOP }
 }"
-        };
-    }
+		};
+	}
 
 
-    public static async Task<Game> CreateGameObjFromJson(int appId)
-    {
-        using var client = new HttpClient();
-        var random = new Random();
-        //var response = await client.GetStringAsync($"https://store.steampowered.com/api/appdetails?appids={appId}&cc=se&filters=basic,price_overview,metacritic,genres,release_date");
-        var response = InitializeDbFromSteamApi(appId);
+	public static async Task<Game> CreateGameObjFromJson(int appId)
+	{
+		using var client = new HttpClient();
+		var random = new Random();
+		//var response = await client.GetStringAsync($"https://store.steampowered.com/api/appdetails?appids={appId}&cc=se&filters=basic,price_overview,metacritic,genres,release_date");
+		var response = InitializeDbFromSteamApi(appId);
 
-        var settings = new JsonSerializerSettings();
-        //settings.Converters.Add(new AppDetailsResponseConverter());
-        var data = JsonConvert.DeserializeObject<AppDetailsContainer>(response);
-        if (data == null)
-        {
-            return default;
-        }
+		var settings = new JsonSerializerSettings();
+		//settings.Converters.Add(new AppDetailsResponseConverter());
+		var data = JsonConvert.DeserializeObject<AppDetailsContainer>(response);
+		if (data == null)
+		{
+			return default;
+		}
 
-        var gameData = data.Data;
+		var gameData = data.Data;
 
-        return new Game
-        {
-            Type = gameData?.Type ?? "",
-            Name = gameData?.Name ?? "",
-            SteamAppId = gameData!.SteamAppid,
-            RequiredAge = gameData?.RequiredAge,
-            IsFree = gameData?.IsFree,
-            DetailedDescription = gameData?.DetailedDescription ?? "",
-            AboutTheGame = gameData?.AboutTheGame ?? "",
-            ShortDescription = gameData?.ShortDescription ?? "",
-            SupportedLanguages = gameData?.SupportedLanguages ?? "",
-            HeaderImage = gameData?.HeaderImage ?? "",
-            Website = gameData?.Website ?? "",
-            PcRequirements = gameData?.PcRequirements != null ? JsonConvert.SerializeObject(gameData.PcRequirements) : "",
-            MacRequirements = gameData?.MacRequirements != null ? JsonConvert.SerializeObject(gameData.MacRequirements) : "",
-            LinuxRequirements = gameData?.LinuxRequirements != null ? JsonConvert.SerializeObject(gameData.LinuxRequirements) : "",
-            Developers = gameData?.Developers != null ? string.Join(", ", gameData.Developers) : string.Empty,
-            Publishers = gameData?.Publishers != null ? string.Join(", ", gameData.Publishers) : string.Empty,
-            Categories = gameData?.Categories != null ? string.Join(", ", gameData.Categories.Select(c => c.Description)) : string.Empty,
-            Genres = gameData?.Genres != null ? string.Join(", ", gameData.Genres.Select(g => g.Description)) : string.Empty,
-            Screenshots = gameData?.Screenshots != null ? string.Join(", ", gameData.Screenshots.Select(s => s.PathFull)) : string.Empty,
-            Movies = gameData?.Movies != null ? string.Join(", ", gameData.Movies.Select(m => m.Name)) : string.Empty,
-            Platforms = gameData?.Platforms != null ? $"Windows: {gameData.Platforms.Windows}, Mac: {gameData.Platforms.Mac}, Linux: {gameData.Platforms.Linux}" : string.Empty,
-            MetacriticScore = gameData?.Metacritic?.Score,
-            MetacriticUrl = gameData?.Metacritic?.Url ?? "",
-            TotalRecommendations = gameData?.Recommendations?.Total ?? 0,
-            TotalAchievements = gameData?.Achievements?.Total ?? 0,
-            ReleaseDate = gameData?.ReleaseDate != null ? JsonConvert.SerializeObject(gameData.ReleaseDate.Date) : "",
-            ComingSoon = gameData?.ReleaseDate?.ComingSoon,
-            SupportInfo = gameData?.SupportInfo != null ? $"{gameData.SupportInfo.Url}, {gameData.SupportInfo.Email}" : "",
-            Background = gameData?.Background ?? "",
-            ContentDescriptors = gameData?.ContentDescriptors != null ? string.Join(", ", gameData.ContentDescriptors.Ids) : string.Empty,
-            InitialPrice = gameData?.PriceOverview?.Initial ?? 0,
-            DiscountPercent = gameData?.PriceOverview?.DiscountPercent ?? 0,
-            Stock = (byte)random.Next(5, 73)
-        };
-    }
+		return new Game
+		{
+			Type = gameData?.Type ?? "",
+			Name = gameData?.Name ?? "",
+			SteamAppId = gameData!.SteamAppid,
+			RequiredAge = gameData?.RequiredAge,
+			IsFree = gameData?.IsFree,
+			DetailedDescription = gameData?.DetailedDescription ?? "",
+			AboutTheGame = gameData?.AboutTheGame ?? "",
+			ShortDescription = gameData?.ShortDescription ?? "",
+			SupportedLanguages = gameData?.SupportedLanguages ?? "",
+			HeaderImage = gameData?.HeaderImage ?? "",
+			Website = gameData?.Website ?? "",
+			PcRequirements = gameData?.PcRequirements != null ? JsonConvert.SerializeObject(gameData.PcRequirements) : "",
+			MacRequirements = gameData?.MacRequirements != null ? JsonConvert.SerializeObject(gameData.MacRequirements) : "",
+			LinuxRequirements = gameData?.LinuxRequirements != null ? JsonConvert.SerializeObject(gameData.LinuxRequirements) : "",
+			Developers = gameData?.Developers != null ? string.Join(", ", gameData.Developers) : string.Empty,
+			Publishers = gameData?.Publishers != null ? string.Join(", ", gameData.Publishers) : string.Empty,
+			Categories = gameData?.Categories != null ? string.Join(", ", gameData.Categories.Select(c => c.Description)) : string.Empty,
+			Genres = gameData?.Genres != null ? string.Join(", ", gameData.Genres.Select(g => g.Description)) : string.Empty,
+			Screenshots = gameData?.Screenshots != null ? string.Join(", ", gameData.Screenshots.Select(s => s.PathFull)) : string.Empty,
+			Movies = gameData?.Movies != null ? string.Join(", ", gameData.Movies.Select(m => m.Name)) : string.Empty,
+			Platforms = gameData?.Platforms != null ? $"Windows: {gameData.Platforms.Windows}, Mac: {gameData.Platforms.Mac}, Linux: {gameData.Platforms.Linux}" : string.Empty,
+			MetacriticScore = gameData?.Metacritic?.Score,
+			MetacriticUrl = gameData?.Metacritic?.Url ?? "",
+			TotalRecommendations = gameData?.Recommendations?.Total ?? 0,
+			TotalAchievements = gameData?.Achievements?.Total ?? 0,
+			ReleaseDate = gameData?.ReleaseDate != null ? JsonConvert.SerializeObject(gameData.ReleaseDate.Date) : "",
+			ComingSoon = gameData?.ReleaseDate?.ComingSoon,
+			SupportInfo = gameData?.SupportInfo != null ? $"{gameData.SupportInfo.Url}, {gameData.SupportInfo.Email}" : "",
+			Background = gameData?.Background ?? "",
+			ContentDescriptors = gameData?.ContentDescriptors != null ? string.Join(", ", gameData.ContentDescriptors.Ids) : string.Empty,
+			InitialPrice = gameData?.PriceOverview?.Initial ?? 0,
+			DiscountPercent = gameData?.PriceOverview?.DiscountPercent ?? 0,
+			Stock = (byte)random.Next(5, 73)
+		};
+	}
 }

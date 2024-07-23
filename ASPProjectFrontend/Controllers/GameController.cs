@@ -1,10 +1,10 @@
-﻿using ASPProjectFrontend.Services;
+﻿using ASPProjectFrontend.Models;
+using ASPProjectFrontend.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASPProjectFrontend.Controllers;
-public class GameController(ApiServices apiServices) : Controller
+public class GameController(ApiServices api) : Controller
 {
-    private readonly ApiServices _api = apiServices;
     // GET: GameController
     public ActionResult Index()
     {
@@ -47,16 +47,15 @@ public class GameController(ApiServices apiServices) : Controller
     // POST: GameController/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit(int id, IFormCollection collection)
+    public async Task<ActionResult> Edit(Game updateGame)
     {
-        try
+        var result = await api.EditGame(updateGame);
+        if (result)
         {
             return RedirectToAction(nameof(Index));
         }
-        catch
-        {
-            return View();
-        }
+
+        return View();
     }
 
     // GET: GameController/Delete/5
