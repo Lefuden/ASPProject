@@ -4,14 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace ASPProjectFrontend.Controllers;
-public class HomeController(ApiServices apiServices, ILogger<HomeController> logger) : Controller
+public class HomeController(ApiServices api, ILogger<HomeController> logger) : BaseController(api)
 {
-    private readonly ApiServices _api = apiServices;
     private readonly ILogger<HomeController> _logger = logger;
 
     public async Task<IActionResult> Index()
     {
-        return View(await _api.GetAllGames());
+        return View(await api.GetAllGames());
     }
 
     public IActionResult Privacy()

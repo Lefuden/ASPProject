@@ -1,0 +1,51 @@
+﻿@model ShoppingCart
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Products)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Products) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@* <div class="game-card">
+	<img src="@game.HeaderImage" alt="@game.Name" class="game-header-image">
+	<div class="game-details">
+		<h2 class="game-title">@game.Name</h2>
+		<p class="game-short-description">@game.ShortDescription</p>
+		<p class="game-price">
+			@if (game.DiscountPercent != 1.00f)
+			{
+				var discountedPrice = game.InitialPrice * (1 - game.DiscountPercent / 100);
+				<span class="original-price">@game.InitialPrice.Value.ToString("C")</span>
+				<span class="discounted-price">@discountedPrice.Value.ToString("C")</span>
+			}
+			else
+			{
+				<span>@game.InitialPrice.Value.ToString("C")</span>
+			}
+		</p>
+	</div>
+</div> *@
