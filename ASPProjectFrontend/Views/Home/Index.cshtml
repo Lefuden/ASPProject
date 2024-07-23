@@ -14,17 +14,26 @@
         <div class="row">
             <div class="col-md-4">
               @foreach(var game in Model){
-                Html.Partial("_GameCard", game);
+                    <div class="game-card">
+                        <img src="@game.HeaderImage" alt="@game.Name" class="game-header-image">
+                        <div class="game-details">
+                            <h2 class="game-title">@game.Name</h2>
+                            <p class="game-short-description">@game.ShortDescription</p>
+                            <p class="game-price">
+                                @if (game.DiscountPercent.HasValue && game.DiscountPercent > 0)
+                                {
+                                    var discountedPrice = game.InitialPrice * (1 - game.DiscountPercent.Value / 100);
+                                    <span class="original-price">@game.InitialPrice.Value.ToString("C")</span>
+                                    <span class="discounted-price">@discountedPrice.Value.ToString("C")</span>
+                                }
+                                else
+                                {
+                                    <span>@game.InitialPrice.Value.ToString("C")</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
               }
-                @* @Html.Partial("_GameCard", new Game
-                {
-                    Id = 1,
-                    Name = "Example Game",
-                    ShortDescription = "This is a short description of the example game.",
-                    HeaderImage = "path-to-image.jpg",
-                    InitialPrice = 59,
-                    DiscountPercent = 20
-                }) *@
             </div>
         </div>
     </div>
