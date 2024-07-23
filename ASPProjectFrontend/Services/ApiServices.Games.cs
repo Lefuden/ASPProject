@@ -15,6 +15,24 @@ public partial class ApiServices
 
         var jsonResponse = await response.Content.ReadAsStringAsync();
         var games = JsonConvert.DeserializeObject<List<Game>>(jsonResponse);
-        return games!;
+        return games;
+    }
+
+    public async Task<Game> GetGameById(int? id)
+    {
+        if (id == null)
+        {
+            return default;
+        }
+
+        var response = await _client.GetAsync($"Games/{id}");
+        if (!response.IsSuccessStatusCode)
+        {
+            return default;
+        }
+
+        var jsonResponse = await response.Content.ReadAsStringAsync();
+        var game = JsonConvert.DeserializeObject<Game>(jsonResponse);
+        return game!;
     }
 }

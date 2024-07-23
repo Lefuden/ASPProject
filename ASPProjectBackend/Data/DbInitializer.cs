@@ -300,7 +300,10 @@ public static class DbInitializer
         }
 
         var gameData = data.Data;
-
+        if (gameData != null && (gameData?.PriceOverview?.DiscountPercent == null || gameData?.PriceOverview?.DiscountPercent == 0))
+        {
+            gameData!.PriceOverview.DiscountPercent = 1;
+        }
         return new Game
         {
             Type = gameData?.Type ?? "",
@@ -334,7 +337,7 @@ public static class DbInitializer
             Background = gameData?.Background ?? "",
             ContentDescriptors = gameData?.ContentDescriptors != null ? string.Join(", ", gameData.ContentDescriptors.Ids) : string.Empty,
             InitialPrice = gameData?.PriceOverview?.Initial ?? 0,
-            DiscountPercent = gameData?.PriceOverview?.DiscountPercent ?? 0,
+            DiscountPercent = gameData?.PriceOverview.DiscountPercent ?? 1,
             Stock = (byte)random.Next(5, 73)
         };
     }

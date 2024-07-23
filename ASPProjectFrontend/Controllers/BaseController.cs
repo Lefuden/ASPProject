@@ -45,5 +45,7 @@ public class BaseController(ApiServices api) : Controller
             Secure = true,
             Expires = DateTime.Now.AddDays(7)
         });
+
+        SetShoppingCartInViewBag(shoppingCart);
     }
 }
