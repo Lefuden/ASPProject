@@ -3,9 +3,6 @@
 public class Game
 {
     public int Id { get; set; }
-
-    //[Required]
-    //[StringLength(50, MinimumLength = 1, ErrorMessage = "Name must be between 1 and 50 characters")]
     public string? Name { get; set; }
     public uint? SteamAppId { get; set; }
     public string? AboutTheGame { get; set; }

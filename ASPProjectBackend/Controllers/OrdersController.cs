@@ -12,14 +12,17 @@ namespace ASPProjectBackend.Controllers
     {
         // GET: api/Orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
+        public async Task<ActionResult<IEnumerable<OrderDto>>> GetAllOrders()
         {
-            return await context.Orders.ToListAsync();
+            var orders = await context.Orders.ToListAsync();
+            var orderDtoList = orders.Select(OrderToDto).ToList();
+
+            return orderDtoList;
         }
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(int id)
+        public async Task<ActionResult<OrderDto>> GetOrder(int id)
         {
             var order = await context.Orders.FindAsync(id);
 
@@ -28,11 +31,11 @@ namespace ASPProjectBackend.Controllers
                 return NotFound();
             }
 
-            return order;
+            return OrderToDto(order);
         }
 
         [HttpGet("User/{id}")]
-        public async Task<ActionResult<IEnumerable<UserOrderDto>>> GetUserOrders(int? id)
+        public async Task<ActionResult<IEnumerable<OrderDto>>> GetAllUserOrders(int? id)
         {
             if (id == null)
             {
@@ -118,7 +121,7 @@ namespace ASPProjectBackend.Controllers
             return context.Orders.Any(e => e.OrderId == id);
         }
 
-        private static UserOrderDto OrderToDto(Order order) => new()
+        private static OrderDto OrderToDto(Order order) => new()
         {
             OrderId = order.OrderId,
             OrderDate = order.OrderDate,
