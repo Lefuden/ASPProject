@@ -107,15 +107,22 @@ body {
     padding-right: 0;
     padding-left: 0;
 }
-
+footer {
+    border-top: solid 2px var(--accent-blue);
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 40px !important;
+    width: 100% !important;
+}
 .navbar {
     height: 50px !important;
+    border-bottom: solid 2px var(--accent-blue);
 }
 
 .card {
     display: flex;
     flex-direction: column;
-    border: solid 3px var(--accent-red) !important;
+    border: solid 3px var(--accent-blue) !important;
     border-radius: 6px;
 }
 .card-header {
@@ -128,7 +135,6 @@ body {
     flex-direction: column;
     justify-content: flex-start;
     height: 100%;
-    
 }
 
 .cart-container {
