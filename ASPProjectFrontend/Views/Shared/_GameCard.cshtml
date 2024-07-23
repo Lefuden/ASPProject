@@ -1,0 +1,24 @@
+@model Game;
+@{
+
+}
+
+<div class="game-card">
+    <img src="@Model.HeaderImage" alt="@Model.Name" class="game-header-image">
+    <div class="game-details">
+        <h2 class="game-title">@Model.Name</h2>
+        <p class="game-short-description">@Model.ShortDescription</p>
+        <p class="game-price">
+            @if (Model.DiscountPercent.HasValue && Model.DiscountPercent > 0)
+            {
+                var discountedPrice = Model.InitialPrice * (1 - Model.DiscountPercent.Value / 100);
+                <span class="original-price">@Model.InitialPrice.Value.ToString("C")</span>
+                <span class="discounted-price">@discountedPrice.Value.ToString("C")</span>
+            }
+            else
+            {
+                <span>@Model.InitialPrice.Value.ToString("C")</span>
+            }
+        </p>
+    </div>
+</div>

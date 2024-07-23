@@ -1,21 +1,41 @@
-﻿@using System.Security.Claims
+﻿@model List<Game>;
+@using System.Security.Claims
 @inject IHttpContextAccessor HttpContextAccessor
 @{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Store";
+	var auth = HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
+	var admin = HttpContextAccessor.HttpContext.User.IsInRole("Admin");
+	var email = HttpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 }
 <div class="text-center">
-	@if (!HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
-	{
-		<a asp-action="SignInWithGoogle" asp-controller="Authentication" class="btn btn-primary">
-			<i class="fa-brands fa-google"></i>
-		Login with Google
-		</a>
-	}
-	else
-	{
-		var email = HttpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
-		<p>Email: @email</p>
-		<br/>
-		<a asp-action="Logout" asp-controller="Account" class="btn btn-danger">Logout</a>
-	}
+	
+	
+	<div class="container mt-5">
+        <div class="row">
+            <div class="col-md-4">
+              @foreach(var game in Model){
+                    <div class="game-card">
+                        <img src="@game.HeaderImage" alt="@game.Name" class="game-header-image">
+                        <div class="game-details">
+                            <h2 class="game-title">@game.Name</h2>
+                            <p class="game-short-description">@game.ShortDescription</p>
+                            <p class="game-price">
+                                @if (game.DiscountPercent.HasValue && game.DiscountPercent > 0)
+                                {
+                                    var discountedPrice = game.InitialPrice * (1 - game.DiscountPercent.Value / 100);
+                                    <span class="original-price">@game.InitialPrice.Value.ToString("C")</span>
+                                    <span class="discounted-price">@discountedPrice.Value.ToString("C")</span>
+                                }
+                                else
+                                {
+                                    <span>@game.InitialPrice.Value.ToString("C")</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+              }
+            </div>
+        </div>
+    </div>
+	
 </div>

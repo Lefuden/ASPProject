@@ -1,4 +1,4 @@
-html {
+/* html {
   font-size: 14px;
 }
 
@@ -19,4 +19,67 @@ html {
 
 body {
   margin-bottom: 60px;
+} */
+
+:root {
+  --primary-bg-color: #1E1E1E;
+  /* Dark background */
+  --secondary-bg-color: #252526;
+  /* Slightly lighter background */
+  --accent-color: #0D7EBB;
+  /* Accent blue color */
+  --text-color: #D4D4D4;
+  /* Light text color */
+  --muted-text-color: #808080;
+  /* Muted text color */
+  --card-bg-color: #2D2D2D;
+  /* Card background color */
+}
+
+body {
+  background-color: var(--primary-bg-color);
+  color: var(--text-color);
+}
+
+.navbar {
+  background-color: var(--secondary-bg-color);
+}
+
+.nav-link {
+  color: var(--text-color);
+}
+
+.nav-link:hover {
+  color: var(--accent-color);
+}
+
+.game-card {
+  background-color: var(--card-bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--secondary-bg-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.game-header-image {
+  width: 100%;
+  height: auto;
+}
+
+.game-details {
+  padding: 16px;
+}
+
+.game-title {
+  font-size: 1.5em;
+  color: var(--accent-color);
+}
+
+.game-short-description {
+  color: var(--muted-text-color);
+}
+
+.game-price {
+  font-size: 1.2em;
+  color: var(--text-color);
 }
