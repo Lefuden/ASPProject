@@ -51,7 +51,7 @@ public class AuthenticationController(UserManager<User> userManager, SignInManag
             }
         }
 
-        var token = GenerateJwtToken(user.UserName, user.Email);
+        var token = GenerateJwtToken(user.UserName, user.Email, user.Id);
 
         return Ok(new AuthResponse
         {
@@ -76,7 +76,7 @@ public class AuthenticationController(UserManager<User> userManager, SignInManag
             return null;
         }
     }
-    private string GenerateJwtToken(string userName, string email)
+    private string GenerateJwtToken(string userName, string email, int userId)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtkey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -86,6 +86,7 @@ public class AuthenticationController(UserManager<User> userManager, SignInManag
             new Claim(ClaimTypes.Email, email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(ClaimTypes.Name, userName),
+            new Claim(ClaimTypes.NameIdentifier, userId.ToString())
         };
 
         var token = new JwtSecurityToken(

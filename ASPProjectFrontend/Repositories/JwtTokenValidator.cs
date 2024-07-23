@@ -21,6 +21,7 @@ public class JwtTokenValidator(IConfiguration configuration) : IJwtTokenValidato
             jwtToken.Claims.FirstOrDefault(claim => ClaimTypes.Name == claim.Type),
             //jwtToken.Claims.FirstOrDefault(claim => JwtRegisteredClaimNames.Sub == claim.Type),
             jwtToken.Claims.FirstOrDefault(claim => ClaimTypes.Email == claim.Type),
+            jwtToken.Claims.FirstOrDefault(claim => ClaimTypes.NameIdentifier == claim.Type),
             new Claim("Token", token)
         ];
     }
