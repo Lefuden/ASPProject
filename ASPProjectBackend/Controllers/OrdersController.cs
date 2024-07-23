@@ -1,6 +1,5 @@
 ﻿using ASPProjectBackend.Data;
 using ASPProjectBackend.Models;
-using ASPProjectBackend.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,17 +11,11 @@ namespace ASPProjectBackend.Controllers
     {
         // GET: api/Orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderDto>>> GetAllOrders()
-        {
-            var orders = await context.Orders.ToListAsync();
-            var orderDtoList = orders.Select(OrderToDto).ToList();
-
-            return orderDtoList;
-        }
+        public async Task<ActionResult<IEnumerable<Order>>> GetAllOrders() => await context.Orders.ToListAsync();
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<OrderDto>> GetOrder(int id)
+        public async Task<ActionResult<Order>> GetOrder(int id)
         {
             var order = await context.Orders.FindAsync(id);
 
@@ -31,44 +24,45 @@ namespace ASPProjectBackend.Controllers
                 return NotFound();
             }
 
-            return OrderToDto(order);
+            return order;
         }
 
         [HttpGet("User/{id}")]
-        public async Task<ActionResult<IEnumerable<OrderDto>>> GetAllUserOrders(int? id)
+        public async Task<ActionResult<IEnumerable<Order>>> GetAllUserOrders(int? userId)
         {
-            if (id == null)
+            if (userId == null)
             {
                 Console.WriteLine("User not found");
                 return NotFound();
             }
 
-            var order = await context.Orders
-                .Include(u => u.User)
-                .Where(u => u.UserId == u.User.Id && u.UserId == id)
+            var orders = await context.Orders
+                .Include(o => o.User)
+                    .ThenInclude(u => u.Address)
+                .Where(o => o.UserId == userId)
                 .ToListAsync();
 
-            if (order == null)
+            if (orders.Count == 0)
             {
                 Console.WriteLine("Orders not found");
                 return NotFound();
             }
 
-            var orderDtoList = order.Select(OrderToDto).ToList();
-            return orderDtoList;
+            //var orderDtoList = orders.Select(OrderToDto).ToList();
+            return orders;
         }
 
         // PUT: api/Orders/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutOrder(int id, Order order)
+        [HttpPut("Edit")]
+        public async Task<IActionResult> PutOrder([FromBody] Order order)
         {
-            if (id != order.OrderId)
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            context.Entry(order).State = EntityState.Modified;
+            context.Update(order);
 
             try
             {
@@ -76,23 +70,19 @@ namespace ASPProjectBackend.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!OrderExists(id))
+                if (!OrderExists(order.OrderId))
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
             }
 
-            return NoContent();
+            return Ok("Order successfully updated");
         }
 
         // POST: api/Orders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
+        public async Task<ActionResult<Order>> PostOrder([FromBody] Order order)
         {
             context.Orders.Add(order);
             await context.SaveChangesAsync();
@@ -101,7 +91,7 @@ namespace ASPProjectBackend.Controllers
         }
 
         // DELETE: api/Orders/5
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
             var order = await context.Orders.FindAsync(id);
@@ -121,15 +111,15 @@ namespace ASPProjectBackend.Controllers
             return context.Orders.Any(e => e.OrderId == id);
         }
 
-        private static OrderDto OrderToDto(Order order) => new()
-        {
-            OrderId = order.OrderId,
-            OrderDate = order.OrderDate,
-            OrderStatus = order.OrderStatus,
-            TotalOrderPrice = order.TotalOrderPrice,
-            ShippingAddress = order.ShippingAddress,
-            BillingAddress = order.BillingAddress,
-            Products = order.Products
-        };
+        //private static OrderDto OrderToDto(Order order) => new()
+        //{
+        //    OrderId = order.OrderId,
+        //    OrderDate = order.OrderDate,
+        //    OrderStatus = order.OrderStatus,
+        //    TotalOrderPrice = order.TotalOrderPrice,
+        //    ShippingAddress = order.ShippingAddress,
+        //    BillingAddress = order.BillingAddress,
+        //    Products = order.Products
+        //};
     }
 }

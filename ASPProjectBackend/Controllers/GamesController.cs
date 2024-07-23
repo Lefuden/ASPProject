@@ -33,12 +33,12 @@ namespace ASPProjectBackend.Controllers
             return GameToDto(game);
         }
 
-        [HttpPost("Edit/{id}")]
-        public async Task<IActionResult> EditGame(int id, UpdateGame updateGame)
+        [HttpPost("Edit")]
+        public async Task<IActionResult> EditGame([FromBody] GameDto gameDto)
         {
             try
             {
-                var game = await context.Games.FirstOrDefaultAsync(g => g.Id == id);
+                var game = await context.Games.FirstOrDefaultAsync(g => g.Id == gameDto.Id);
 
                 if (game == null)
                 {
@@ -46,20 +46,20 @@ namespace ASPProjectBackend.Controllers
                     return NotFound();
                 }
 
-                game.Name = updateGame.Name;
-                //game.SteamAppId = updateGame.SteamAppId;
-                //game.AboutTheGame = updateGame.AboutTheGame;
-                //game.ShortDescription = updateGame.ShortDescription;
-                //game.HeaderImage = updateGame.HeaderImage;
-                //game.Website = updateGame.Website;
-                //game.Developers = updateGame.Developers;
-                //game.Publishers = updateGame.Publishers;
-                //game.Genres = updateGame.Genres;
-                //game.Screenshots = updateGame.Screenshots;
-                //game.MetacriticScore = updateGame.MetacriticScore;
-                //game.ReleaseDate = updateGame.ReleaseDate;
-                game.InitialPrice = updateGame.InitialPrice;
-                game.DiscountPercent = updateGame.DiscountPercent;
+                game.Name = gameDto.Name;
+                game.SteamAppId = gameDto.SteamAppId;
+                game.AboutTheGame = gameDto.AboutTheGame;
+                game.ShortDescription = gameDto.ShortDescription;
+                game.HeaderImage = gameDto.HeaderImage;
+                game.Website = gameDto.Website;
+                game.Developers = gameDto.Developers;
+                game.Publishers = gameDto.Publishers;
+                game.Genres = gameDto.Genres;
+                game.Screenshots = gameDto.Screenshots;
+                game.MetacriticScore = gameDto.MetacriticScore;
+                game.ReleaseDate = gameDto.ReleaseDate;
+                game.InitialPrice = gameDto.InitialPrice;
+                game.DiscountPercent = gameDto.DiscountPercent;
 
                 context.Update(game);
                 await context.SaveChangesAsync();
