@@ -14,39 +14,39 @@ public class HomeController(ApiServices api, ILogger<HomeController> logger) : B
         SetShoppingCartInViewBagFromCookie();
         return View(await api.GetAllGames());
     }
-
     [HttpPost]
     [AllowAnonymous]
-    public async Task<IActionResult> AddToCart(int? id)
+    public IActionResult AddToCart(int? id)
     {
         if (id == null)
         {
             return NotFound();
         }
         var shoppingCart = GetShoppingCartFromCookie();
-        var game = await api.GetGameById(id);
 
-        shoppingCart.Products.Add(game);
+        shoppingCart.Products.Add((int)id);
 
         UpdateShoppingCartCookie(shoppingCart);
 
         return RedirectToAction("Index");
     }
+
     [HttpPost]
     [AllowAnonymous]
-    public async Task<IActionResult> RemoveFromCart(int? id)
+    public IActionResult RemoveFromCart(int? id)
     {
         if (id == null)
         {
             return NotFound();
         }
         var shoppingCart = GetShoppingCartFromCookie();
-        shoppingCart.Products = shoppingCart.Products.Where(game => game.Id != id).ToList();
+        shoppingCart.Products = shoppingCart.Products.Where(productId => productId != id).ToList();
 
         UpdateShoppingCartCookie(shoppingCart);
 
         return RedirectToAction("Index");
     }
+
     public IActionResult Privacy()
     {
         return View();

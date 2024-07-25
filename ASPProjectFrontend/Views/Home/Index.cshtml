@@ -48,7 +48,7 @@
                         </div>
                         @if(shoppingCart != null)
                         {
-                            if(!shoppingCart.Products.Any(g => g.Id == game.Id))
+                            if(!shoppingCart.Products.Any(productId => productId == game.Id))
                             {
                                 <form asp-action="AddToCart" method="post">
                                     <input type="hidden" name="id" value="@game.Id" />

@@ -19,7 +19,7 @@
 @foreach (var item in Model.Products) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @* @Html.DisplayFor(modelItem => item.Name) *@
             </td>
             <td>
                 @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
