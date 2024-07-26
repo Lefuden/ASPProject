@@ -11,7 +11,10 @@ namespace ASPProjectBackend.Controllers
     {
         // GET: api/Orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetAllOrders() => await context.Orders.ToListAsync();
+        public async Task<ActionResult<IEnumerable<Order>>> GetAllOrders()
+        {
+            return await context.Orders.ToListAsync();
+        }
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
