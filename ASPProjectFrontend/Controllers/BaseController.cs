@@ -34,18 +34,18 @@ public class BaseController(ApiServices api) : Controller
 
 		var shoppingCart = JsonConvert.DeserializeObject<ShoppingCart>(shoppingCartJson);
 
-		return shoppingCart;
-	}
-	protected void UpdateShoppingCartCookie(ShoppingCart shoppingCart)
-	{
-		var shoppingCartJson = JsonConvert.SerializeObject(shoppingCart);
-		Response.Cookies.Append("ShoppingCart", shoppingCartJson, new CookieOptions
-		{
-			HttpOnly = true,
-			Secure = true,
-			Expires = DateTime.Now.AddDays(7)
-		});
+        return shoppingCart;
+    }
+    protected void UpdateShoppingCartCookie(ShoppingCart shoppingCart)
+    {
+        var shoppingCartJson = JsonConvert.SerializeObject(shoppingCart);
+        Response.Cookies.Append("ShoppingCart", shoppingCartJson, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            Expires = DateTime.Now.AddDays(7)
+        });
 
-		SetShoppingCartInViewBag(shoppingCart);
-	}
+        SetShoppingCartInViewBag(shoppingCart);
+    }
 }
