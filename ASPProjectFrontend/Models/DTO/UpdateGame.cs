@@ -14,5 +14,5 @@ public class UpdateGame
 
     [Required]
     public uint InitialPrice { get; set; }
-    public float DiscountPercent { get; set; } = 0;
+    public float DiscountPercent { get; set; } = 1.00f;
 }
