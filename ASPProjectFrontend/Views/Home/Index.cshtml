@@ -22,7 +22,8 @@
     }
 
     <div class="row">
-        @foreach(var game in Model){            
+        @foreach(var game in Model){
+            var price = (Math.Round(((float)game.InitialPrice * game.DiscountPercent), 2));
             <div class="col-md-4 mb-4">
                 <div class="card h-100 d-flex flex-column">
                     <img src="@game.HeaderImage" alt="@game.Name" class="card-img-top">
@@ -39,7 +40,7 @@
                         </div>
                         <div class="no-gutters cart-container">
                             <div class="d-flex  justify-content-between align-items-center my-2">
-                                <span class="badge badge-price bg-color">Price: @(Math.Round(((float)game.InitialPrice * game.DiscountPercent), 2)) €</span>
+                                <span class="badge badge-price bg-color">Price: @(price == 0 ? "Free" : price + " €")</span>
                                 @if (game.Stock <= 5)
                                 {
                                     <span class="badge badge-stock accent-red">Stock: @game.Stock</span>
