@@ -1,5 +1,6 @@
 using ASPProjectFrontend.Models;
 using ASPProjectFrontend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -10,7 +11,40 @@ public class HomeController(ApiServices api, ILogger<HomeController> logger) : B
 
     public async Task<IActionResult> Index()
     {
+        SetShoppingCartInViewBagFromCookie();
         return View(await api.GetAllGames());
+    }
+    [HttpPost]
+    [AllowAnonymous]
+    public IActionResult AddToCart(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+        var shoppingCart = GetShoppingCartFromCookie();
+
+        shoppingCart.Products.Add((int)id);
+
+        UpdateShoppingCartCookie(shoppingCart);
+
+        return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    public IActionResult RemoveFromCart(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+        var shoppingCart = GetShoppingCartFromCookie();
+        shoppingCart.Products = shoppingCart.Products.Where(productId => productId != id).ToList();
+
+        UpdateShoppingCartCookie(shoppingCart);
+
+        return RedirectToAction("Index");
     }
 
     public IActionResult Privacy()

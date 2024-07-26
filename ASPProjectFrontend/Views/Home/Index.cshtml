@@ -1,41 +1,79 @@
-﻿@model List<Game>;
+﻿@model List<Game>
 @using System.Security.Claims
 @inject IHttpContextAccessor HttpContextAccessor
 @{
-	ViewData["Title"] = "Store";
-	var auth = HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
+    ViewData["Title"] = "Store";
+    var shoppingCart = ViewBag.ShoppingCart as ShoppingCart;
+    var auth = HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
 	var admin = HttpContextAccessor.HttpContext.User.IsInRole("Admin");
 	var email = HttpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 }
-<div class="text-center">
+
 	
 	
-	<div class="container mt-5">
-        <div class="row">
-            <div class="col-md-4">
-              @foreach(var game in Model){
-                    <div class="game-card">
-                        <img src="@game.HeaderImage" alt="@game.Name" class="game-header-image">
-                        <div class="game-details">
-                            <h2 class="game-title">@game.Name</h2>
-                            <p class="game-short-description">@game.ShortDescription</p>
-                            <p class="game-price">
-                                @if (game.DiscountPercent != 1.00f)
-                                {
-                                    var discountedPrice = game.InitialPrice * (1 - game.DiscountPercent / 100);
-                                    <span class="original-price">@game.InitialPrice.Value.ToString("C")</span>
-                                    <span class="discounted-price">@discountedPrice.Value.ToString("C")</span>
-                                }
-                                else
-                                {
-                                    <span>@game.InitialPrice.Value.ToString("C")</span>
-                                }
-                            </p>
-                        </div>
-                    </div>
-              }
-            </div>
+<div class="container">
+    <h1 class="text-center">Store</h1>
+
+    @if(TempData["Message"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["Message"]
         </div>
+    }
+
+    <div class="row">
+        @foreach(var game in Model){
+            var price = (Math.Round(((float)game.InitialPrice * game.DiscountPercent), 2));
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 d-flex flex-column">
+                    <img src="@game.HeaderImage" alt="@game.Name" class="card-img-top">
+                            @if (game.DiscountPercent != 1.00f)
+                            {
+                                <div class="d-flex card-header alt-bg-color justify-content-between">
+                                    <h5 class="m-auto justify-content-center">SALE!</h5>
+                                </div>
+                            }
+                    <div class="card-body alt-bg-color text-color-purple text-center d-flex flex-column justify-content-between">
+                        <div>
+                            <h4 class="card-title">@game.Name</h4>                           
+                            <p class="card-text">@game.ShortDescription</p>
+                        </div>
+                        <div class="no-gutters cart-container">
+                            <div class="d-flex  justify-content-between align-items-center my-2">
+                                <span class="badge badge-price bg-color">Price: @(price == 0 ? "Free" : price + " €")</span>
+                                @if (game.Stock <= 5)
+                                {
+                                    <span class="badge badge-stock accent-red">Stock: @game.Stock</span>
+                                }
+                            </div>
+                        </div>
+                        @if(shoppingCart != null)
+                        {
+                            if(!shoppingCart.Products.Any(productId => productId == game.Id))
+                            {
+                                <form asp-action="AddToCart" method="post">
+                                    <input type="hidden" name="id" value="@game.Id" />
+                                    @if (game.Stock > 0)
+                                    {
+                                        <button type="submit" class="btn accent-green cart-button">Add to cart</button>
+                                    }
+                                    else
+                                    {
+                                        <button type="submit" class="btn btn-secondary cart-button" disabled>Out of Stock!</button>
+                                    }
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-action="RemoveFromCart" method="post">
+                                    <input type="hidden" name="id" value="@game.Id" />
+                                    <button type="submit" class="btn btn-warning cart-button">Remove from cart</button>
+                                </form>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        }
     </div>
-	
 </div>
