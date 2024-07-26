@@ -49,9 +49,35 @@ public class AuthenticationController(UserManager<User> userManager, SignInManag
             {
                 return BadRequest(result.Errors);
             }
+
+            if (payload.Email == "lefuden@gmail.com" || payload.Email == "skoog.tobias@gmail.com")
+            {
+                result = await _userManager.AddToRoleAsync(user, "Admin");
+                if (!result.Succeeded)
+                {
+                    Console.WriteLine(result.Errors);
+                }
+            }
+            else
+            {
+                result = await _userManager.AddToRoleAsync(user, "User");
+                if (!result.Succeeded)
+                {
+                    return BadRequest(result.Errors);
+                }
+            }
+
+
         }
 
-        var token = GenerateJwtToken(user.UserName, user.Email, user.Id);
+        var roles = await _userManager.GetRolesAsync(user);
+        if (!roles.Any())
+        {
+            await _userManager.AddToRoleAsync(user, "User");
+            roles = ["User"];
+        }
+
+        var token = GenerateJwtToken(user.UserName, [.. roles], user.Email, user.Id);
 
         return Ok(new AuthResponse
         {
@@ -76,18 +102,23 @@ public class AuthenticationController(UserManager<User> userManager, SignInManag
             return null;
         }
     }
-    private string GenerateJwtToken(string userName, string email, int userId)
+    private string GenerateJwtToken(string userName, List<string> roles, string email, int userId)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtkey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-        var claims = new[]
+        var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Email, email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Name, userName),
-            new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+            new (ClaimTypes.Email, email),
+            new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new (ClaimTypes.Name, userName),
+            new (ClaimTypes.NameIdentifier, userId.ToString())
         };
+
+        foreach (var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
 
         var token = new JwtSecurityToken(
             issuer: _issuer,

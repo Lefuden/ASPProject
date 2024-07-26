@@ -1,42 +1,18 @@
-﻿using ASPProjectFrontend.Models;
-using ASPProjectFrontend.Services;
+﻿using ASPProjectFrontend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASPProjectFrontend.Controllers;
 public class ShoppingCartController(ApiServices api) : BaseController(api)
 {
-	// GET: ShoppingCartController
+	[AllowAnonymous]
 	public async Task<IActionResult> Index()
 	{
-		var shoppingCart = new ShoppingCart();
-		var games = await api.GetAllGames();
-		shoppingCart.Products.AddRange(games);
-		ViewBag.ShoppingCart = shoppingCart;
-		//UpdateShoppingCartCookie(shoppingCart);
+		var shoppingCart = GetShoppingCartFromCookie();
 
-		return View();
-	}
+		var games = await api.GetGamesFromIds(shoppingCart.Products);
 
-	// GET: ShoppingCartController/Delete/5
-	public ActionResult Delete(int id)
-	{
-		return View();
-	}
-
-	// POST: ShoppingCartController/Delete/5
-	[HttpPost]
-	[ValidateAntiForgeryToken]
-	public ActionResult Delete(int id, IFormCollection collection)
-	{
-		try
-		{
-			return RedirectToAction(nameof(Index));
-		}
-		catch
-		{
-			return View();
-		}
+		return View(games);
 	}
 
 	[HttpPost]
@@ -48,11 +24,14 @@ public class ShoppingCartController(ApiServices api) : BaseController(api)
 			return NotFound();
 		}
 		var shoppingCart = GetShoppingCartFromCookie();
-		shoppingCart.Products = shoppingCart.Products.Where(game => game.Id != id).ToList();
+		shoppingCart.Products = shoppingCart.Products.Where(productId => productId != id).ToList();
 
 		UpdateShoppingCartCookie(shoppingCart);
-		SetShoppingCartInViewBag(shoppingCart);
 
 		return RedirectToAction("Index");
 	}
+
+	// Checkout Enbart inloggad, är man inte inloggad, hänvisa anvädnaren att logga in och returnera MEN! Tillåt anownymous
+	// För då kan vi kolla HttpContext.User.Identity.IsAuthenticated
+	// Om vi inte är inloggade, hänvisa användaren till login men se till att dem returnerar tillbaka hit
 }

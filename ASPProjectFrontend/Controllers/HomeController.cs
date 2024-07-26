@@ -5,9 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace ASPProjectFrontend.Controllers;
+
 public class HomeController(ApiServices api, ILogger<HomeController> logger) : BaseController(api)
 {
-	private readonly ILogger<HomeController> _logger = logger;
+    private readonly ILogger<HomeController> _logger = logger;
 
     public async Task<IActionResult> Index()
     {
@@ -15,7 +16,6 @@ public class HomeController(ApiServices api, ILogger<HomeController> logger) : B
         return View(await api.GetAllGames());
     }
     [HttpPost]
-    [AllowAnonymous]
     public IActionResult AddToCart(int? id)
     {
         if (id == null)
@@ -32,7 +32,6 @@ public class HomeController(ApiServices api, ILogger<HomeController> logger) : B
     }
 
     [HttpPost]
-    [AllowAnonymous]
     public IActionResult RemoveFromCart(int? id)
     {
         if (id == null)
@@ -47,14 +46,15 @@ public class HomeController(ApiServices api, ILogger<HomeController> logger) : B
         return RedirectToAction("Index");
     }
 
-	public IActionResult Privacy()
-	{
-		return View();
-	}
+    [Authorize(Roles = "Admin")]
+    public IActionResult Privacy()
+    {
+        return View();
+    }
 
-	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-	public IActionResult Error()
-	{
-		return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-	}
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
 }

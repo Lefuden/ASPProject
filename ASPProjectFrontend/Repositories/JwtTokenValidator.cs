@@ -16,14 +16,21 @@ public class JwtTokenValidator(IConfiguration configuration) : IJwtTokenValidato
         {
             return [];
         }
-
-        return [
+        var claims = new List<Claim>(){
             jwtToken.Claims.FirstOrDefault(claim => ClaimTypes.Name == claim.Type),
-            //jwtToken.Claims.FirstOrDefault(claim => JwtRegisteredClaimNames.Sub == claim.Type),
             jwtToken.Claims.FirstOrDefault(claim => ClaimTypes.Email == claim.Type),
             jwtToken.Claims.FirstOrDefault(claim => ClaimTypes.NameIdentifier == claim.Type),
-            new Claim("Token", token)
-        ];
+            new ("Token", token)
+        };
+
+        var roleClaims = jwtToken?.Claims.Where(claim => claim.Type == ClaimTypes.Role).ToList();
+
+        if (roleClaims != null)
+        {
+            claims.AddRange(roleClaims);
+        }
+
+        return claims;
     }
 }
 

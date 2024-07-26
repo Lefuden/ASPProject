@@ -26,7 +26,6 @@ builder.Services.AddAuthentication(options =>
     options.SaveTokens = true;
     options.Scope.Add("profile");
     options.Scope.Add("email");
-
     options.Events = new OAuthEvents
     {
         OnCreatingTicket = async ctx =>
@@ -40,7 +39,12 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("UserOnly", policy => policy.RequireRole("User"));
+});
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ApiServices>();
 builder.Services.AddScoped<IJwtTokenValidator, JwtTokenValidator>();
@@ -61,6 +65,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
