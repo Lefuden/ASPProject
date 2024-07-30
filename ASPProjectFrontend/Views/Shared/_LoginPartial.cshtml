@@ -1,0 +1,16 @@
+﻿@using System.Security.Claims
+@inject IHttpContextAccessor HttpContextAccessor
+
+<li class="nav-item">
+    @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+    {
+        <a asp-action="Logout" asp-controller="Account" class="dropdown-item">Logout</a>
+    }
+    else
+    {
+        <a asp-action="SignInWithGoogle" asp-controller="Authentication" class="dropdown-item">
+            <i class="fa-brands fa-google"></i>
+            Login with Google
+        </a>
+    }
+</li>

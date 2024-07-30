@@ -1,0 +1,14 @@
+﻿<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-person-fill text-capitalize"> </i>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="userDropdown">
+        <li><a asp-action="ViewUserOrders" asp-controller="Orders" class="dropdown-item">View Orders</a></li>
+
+        <li><hr class="dropdown-divider"></li>
+
+
+        <li><a asp-action="Logout" asp-controller="Account" class="dropdown-item dropdown-item-logout">Logout</a></li>
+    </ul>
+</li>
+

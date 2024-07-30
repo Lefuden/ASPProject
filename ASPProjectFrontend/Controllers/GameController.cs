@@ -6,55 +6,59 @@ using Microsoft.AspNetCore.Mvc;
 namespace ASPProjectFrontend.Controllers;
 public class GameController(ApiServices api) : Controller
 {
+    [HttpGet]
     [AllowAnonymous]
     public ActionResult Index()
     {
         return View();
     }
 
+    [HttpGet]
     [AllowAnonymous]
-    public ActionResult Details(int id)
+    public async Task<ActionResult> Details(int id)
     {
-        return View();
+        var game = await api.GetGameById(id);
+        return View(game);
     }
 
     // If needed, Admin only Create Game
 
-
-    // Admin only
-    public ActionResult Edit(int id)
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult> Edit(int id)
     {
-        return View();
+        var game = await api.GetGameById(id);
+        return View(game);
     }
 
-    // Admin only
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<ActionResult> Edit(Game updateGame)
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult> Edit(Game game)
     {
-        var result = await api.EditGame(updateGame);
+        var result = await api.EditGame(game);
         if (result)
         {
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Home");
         }
 
         return View();
     }
 
-    // Admin only
+    [Authorize(Roles = "Admin")]
     public ActionResult Delete(int id)
     {
         return View();
     }
 
-    // Admin only
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
     public ActionResult Delete(int id, IFormCollection collection)
     {
         try
         {
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Home");
         }
         catch
         {

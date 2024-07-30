@@ -1,0 +1,37 @@
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json;
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var user = HttpContextAccessor.HttpContext.User;
+    var shoppingCart = ViewBag.ShoppingCart as ShoppingCart ?? JsonConvert.DeserializeObject<ShoppingCart>(HttpContextAccessor.HttpContext.Request.Cookies["ShoppingCart"]) ?? default;
+}
+
+<li class="nav-item dropdown">
+    @if (user.IsInRole("User"))
+    {
+        <partial name="_ShoppingCartPartial" model="@(shoppingCart)" />
+        <partial name="_UserPartial" />
+    }
+    else if (user.IsInRole("Admin"))
+    {
+        <partial name="_AdminPartial" />
+    }
+    else
+    {
+        <partial name="_ShoppingCartPartial" model="@(shoppingCart)" />
+
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person text-capitalize"> </i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end text-center" aria-labelledby="userDropdown">
+            <a asp-action="SignInWithGoogle" asp-controller="Authentication" class="dropdown-item">
+                <i class="fa-brands fa-google"></i>
+                Login with Google
+            </a>
+        </ul>
+    }
+</li>
+
+

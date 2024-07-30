@@ -1,4 +1,4 @@
-﻿@model ASPProjectFrontend.Models.Game
+﻿@model Game
 
 @{
     ViewData["Title"] = "Edit";
@@ -11,11 +11,16 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-color-purple"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                <label asp-for="Name" class="control-label"></label>                
                 <input asp-for="Name" value="@Model.Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Stock" class="control-label"></label>
+                <input asp-for="Stock" value="@Model.Stock" class="form-control" />
+                <span asp-validation-for="Stock" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ShortDescription" class="control-label"></label>
@@ -32,6 +37,19 @@
                 <input asp-for="DiscountPercent" value="@Model.DiscountPercent" class="form-control" />
                 <span asp-validation-for="DiscountPercent" class="text-danger"></span>
             </div>
+
+            <input type="hidden" asp-for="Id" value="@Model.Id" />
+            <input type="hidden" asp-for="SteamAppId" value="@Model.SteamAppId" />
+            <input type="hidden" asp-for="AboutTheGame" value="@Model.AboutTheGame" />
+            <input type="hidden" asp-for="HeaderImage" value="@Model.HeaderImage" />
+            <input type="hidden" asp-for="Website" value="@Model.Website" />
+            <input type="hidden" asp-for="Developers" value="@Model.Developers" />
+            <input type="hidden" asp-for="Publishers" value="@Model.Publishers" />
+            <input type="hidden" asp-for="Genres" value="@Model.Genres" />
+            <input type="hidden" asp-for="Screenshots" value="@Model.Screenshots" />
+            <input type="hidden" asp-for="MetacriticScore" value="@Model.MetacriticScore" />
+            <input type="hidden" asp-for="ReleaseDate" value="@Model.ReleaseDate" />
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -40,9 +58,5 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Home" asp-action="Index">Back to Store</a>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
