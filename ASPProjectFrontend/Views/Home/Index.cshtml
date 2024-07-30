@@ -1,5 +1,6 @@
 ﻿@model List<Game>
 @using System.Security.Claims
+@using ASPProjectFrontend.Helpers
 @inject IHttpContextAccessor HttpContextAccessor
 @{
     ViewData["Title"] = "Store";
@@ -30,7 +31,7 @@
                             @if (game.DiscountPercent != 1.00f)
                             {
                                 <div class="d-flex card-header alt-bg-color justify-content-between">
-                                    <h5 class="m-auto justify-content-center">SALE!</h5>
+                                    <h5 class="m-auto justify-content-center">@DiscountConverter.ConvertFromProduct(game.DiscountPercent)% SALE!</h5>
                                 </div>
                             }
                     <div class="card-body alt-bg-color text-color-purple text-center d-flex flex-column justify-content-between">
