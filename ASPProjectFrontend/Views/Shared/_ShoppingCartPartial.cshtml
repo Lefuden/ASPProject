@@ -1,0 +1,16 @@
+﻿@model ShoppingCart
+@if (Model.Products.Count > 0)
+{
+    <li class="nav-item">
+        <a class="nav-link" asp-area="" asp-controller="ShoppingCart" asp-action="Index">
+            <i class="bi bi-cart-fill"></i>
+            <span class="badge bg-secondary">@Model.Products.Count</span>
+        </a>
+    </li>
+}
+else
+{
+     <li class="nav-item m-auto">
+        <i class="bi bi-cart"></i>
+    </li>
+}

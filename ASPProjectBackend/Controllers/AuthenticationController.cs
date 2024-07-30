@@ -39,7 +39,8 @@ public class AuthenticationController(UserManager<User> userManager, SignInManag
             newUser = true;
             user = new User
             {
-                UserName = payload.Name,
+                //UserName = payload.Name.Replace(" ", "").Trim(),
+                UserName = payload.Name.Trim(),
                 Email = payload.Email,
                 EmailConfirmed = true
             };

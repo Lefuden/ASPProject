@@ -9,52 +9,52 @@ namespace ASPProjectFrontend.Controllers;
 public class BaseController(ApiServices api) : Controller
 {
 
-	[AllowAnonymous]
-	protected void SetShoppingCartInViewBagFromCookie()
-	{
-		var shoppingCart = GetShoppingCartFromCookie();
+    [AllowAnonymous]
+    protected void SetShoppingCartInViewBagFromCookie()
+    {
+        var shoppingCart = GetShoppingCartFromCookie();
 
-		if (shoppingCart != null)
-		{
-			ViewBag.ShoppingCart = shoppingCart;
-		}
-	}
+        if (shoppingCart != null)
+        {
+            ViewBag.ShoppingCart = shoppingCart;
+        }
+    }
 
-	[AllowAnonymous]
-	protected void SetShoppingCartInViewBag(ShoppingCart shoppingCart)
-	{
-		if (shoppingCart != null)
-		{
-			ViewBag.ShoppingCart = shoppingCart;
-		}
-	}
+    [AllowAnonymous]
+    protected void SetShoppingCartInViewBag(ShoppingCart shoppingCart)
+    {
+        if (shoppingCart != null)
+        {
+            ViewBag.ShoppingCart = shoppingCart;
+        }
+    }
 
-	[AllowAnonymous]
-	protected ShoppingCart GetShoppingCartFromCookie()
-	{
-		var shoppingCartJson = HttpContext.Request.Cookies["ShoppingCart"];
+    [AllowAnonymous]
+    protected ShoppingCart GetShoppingCartFromCookie()
+    {
+        var shoppingCartJson = HttpContext.Request.Cookies["ShoppingCart"];
 
-		if (string.IsNullOrEmpty(shoppingCartJson))
-		{
-			return new ShoppingCart();
-		}
+        if (string.IsNullOrEmpty(shoppingCartJson))
+        {
+            return new ShoppingCart();
+        }
 
-		var shoppingCart = JsonConvert.DeserializeObject<ShoppingCart>(shoppingCartJson);
+        var shoppingCart = JsonConvert.DeserializeObject<ShoppingCart>(shoppingCartJson);
 
-		return shoppingCart;
-	}
+        return shoppingCart;
+    }
 
-	[AllowAnonymous]
-	protected void UpdateShoppingCartCookie(ShoppingCart shoppingCart)
-	{
-		var shoppingCartJson = JsonConvert.SerializeObject(shoppingCart);
-		Response.Cookies.Append("ShoppingCart", shoppingCartJson, new CookieOptions
-		{
-			HttpOnly = true,
-			Secure = true,
-			Expires = DateTime.Now.AddDays(7)
-		});
+    [AllowAnonymous]
+    protected void UpdateShoppingCartCookie(ShoppingCart shoppingCart)
+    {
+        var shoppingCartJson = JsonConvert.SerializeObject(shoppingCart);
+        Response.Cookies.Append("ShoppingCart", shoppingCartJson, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            Expires = DateTime.Now.AddDays(7)
+        });
 
-		SetShoppingCartInViewBag(shoppingCart);
-	}
+        SetShoppingCartInViewBag(shoppingCart);
+    }
 }

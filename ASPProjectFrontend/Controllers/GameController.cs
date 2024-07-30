@@ -6,60 +6,65 @@ using Microsoft.AspNetCore.Mvc;
 namespace ASPProjectFrontend.Controllers;
 public class GameController(ApiServices api) : Controller
 {
+    [HttpGet]
+    [AllowAnonymous]
+    public ActionResult Index()
+    {
+        return View();
+    }
 
-	[AllowAnonymous]
-	public ActionResult Index()
-	{
-		return View();
-	}
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<ActionResult> Details(int id)
+    {
+        var game = await api.GetGameById(id);
+        return View(game);
+    }
 
-	[AllowAnonymous]
-	public ActionResult Details(int id)
-	{
-		return View();
-	}
-
-	// If needed, Admin only Create Game
+    // If needed, Admin only Create Game
 
 
-	// Admin only
-	public ActionResult Edit(int id)
-	{
-		return View();
-	}
+    // Admin only
+    [HttpGet]
+    //[Authorize(Roles = "Admin")]
+    public async Task<ActionResult> Edit(int id)
+    {
+        var game = await api.GetGameById(id);
+        return View(game);
+    }
 
-	// Admin only
-	[HttpPost]
-	[ValidateAntiForgeryToken]
-	public async Task<ActionResult> Edit(Game updateGame)
-	{
-		var result = await api.EditGame(updateGame);
-		if (result)
-		{
-			return RedirectToAction(nameof(Index));
-		}
+    // Admin only
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<ActionResult> Edit(Game game)
+    {
+        var result = await api.EditGame(game);
+        if (result)
+        {
+            return RedirectToAction("Index", "Home");
+        }
 
-		return View();
-	}
+        return View();
+    }
 
-	// Admin only
-	public ActionResult Delete(int id)
-	{
-		return View();
-	}
+    // Admin only
+    public ActionResult Delete(int id)
+    {
+        return View();
+    }
 
-	// Admin only
-	[HttpPost]
-	[ValidateAntiForgeryToken]
-	public ActionResult Delete(int id, IFormCollection collection)
-	{
-		try
-		{
-			return RedirectToAction(nameof(Index));
-		}
-		catch
-		{
-			return View();
-		}
-	}
+    // Admin only
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult Delete(int id, IFormCollection collection)
+    {
+        try
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        catch
+        {
+            return View();
+        }
+    }
 }
