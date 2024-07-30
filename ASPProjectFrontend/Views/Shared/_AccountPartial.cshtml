@@ -5,13 +5,12 @@
 
 @{
     var user = HttpContextAccessor.HttpContext.User;
-    var shoppingCart = ViewBag.ShoppingCart as ShoppingCart ?? JsonConvert.DeserializeObject<ShoppingCart>(HttpContextAccessor.HttpContext.Request.Cookies["ShoppingCart"]) ?? default;
 }
 
 <li class="nav-item dropdown">
     @if (user.IsInRole("User"))
     {
-        <partial name="_ShoppingCartPartial" model="@(shoppingCart)" />
+        <partial name="_ShoppingCartPartial" />
         <partial name="_UserPartial" />
     }
     else if (user.IsInRole("Admin"))
@@ -20,7 +19,7 @@
     }
     else
     {
-        <partial name="_ShoppingCartPartial" model="@(shoppingCart)" />
+        <partial name="_ShoppingCartPartial"/>
 
         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-person text-capitalize"> </i>

@@ -20,6 +20,21 @@ public class BaseController(ApiServices api) : Controller
     }
 
     [AllowAnonymous]
+    protected void UpdateShoppingCartAfterCheckout()
+    {
+        ShoppingCart shoppingCart = new();
+        var shoppingCartJson = JsonConvert.SerializeObject(shoppingCart);
+        Response.Cookies.Append("ShoppingCart", shoppingCartJson, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            Expires = DateTime.Now.AddDays(7)
+        });
+
+        SetShoppingCartInViewBag(shoppingCart);
+    }
+
+    [AllowAnonymous]
     protected void SetShoppingCartInViewBag(ShoppingCart shoppingCart)
     {
         if (shoppingCart != null)

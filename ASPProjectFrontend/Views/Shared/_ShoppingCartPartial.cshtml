@@ -1,10 +1,14 @@
-﻿@model ShoppingCart
-@if (Model.Products.Count > 0)
+﻿@using Newtonsoft.Json;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var shoppingCart = ViewBag.ShoppingCart as ShoppingCart ?? JsonConvert.DeserializeObject<ShoppingCart>(HttpContextAccessor.HttpContext.Request.Cookies["ShoppingCart"]) ?? default;
+}
+@if (shoppingCart.Products.Count > 0)
 {
     <li class="nav-item">
         <a class="nav-link" asp-area="" asp-controller="ShoppingCart" asp-action="Index">
             <i class="bi bi-cart-fill"></i>
-            <span class="badge bg-secondary">@Model.Products.Count</span>
+            <span class="badge bg-secondary">@shoppingCart.Products.Count</span>
         </a>
     </li>
 }

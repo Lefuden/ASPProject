@@ -103,7 +103,7 @@ body {
 }
 
 .nav-link:hover {
-    color: var(--accent-green) !important;
+        color: var(--accent-green) !important;
 }
 
 .container-flex {
