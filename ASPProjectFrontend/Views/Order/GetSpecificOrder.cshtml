@@ -1,0 +1,47 @@
+﻿@model ASPProjectFrontend.Models.Order
+
+@{
+    ViewData["Title"] = "GetSpecificOrder";
+}
+
+<h1>Order details</h1>
+
+<div>
+    <h4>Order</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OrderId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OrderId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OrderDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OrderStatus)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OrderStatus)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TotalOrderPrice)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TotalOrderPrice)
+        </dd>
+    </dl>
+</div>
+<div>
+    @if (User.IsInRole("User"))
+    {
+        <a asp-controller="Home" asp-action="Index">Back to List</a>
+    }else if (User.IsInRole("Admin"))
+    {
+        <a asp-controller="Home" asp-action="Index">Back to List</a>
+    }
+</div>
