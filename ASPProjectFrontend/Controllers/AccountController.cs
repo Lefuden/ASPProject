@@ -5,10 +5,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASPProjectFrontend.Controllers;
-public class AccountController(ApiServices apiServices) : Controller
+public class AccountController(ApiServices api) : Controller
 {
-	private readonly ApiServices _api = apiServices;
-
 	[HttpGet]
 	public async Task<IActionResult> AddAddress()
 	{
@@ -20,7 +18,7 @@ public class AccountController(ApiServices apiServices) : Controller
 	public async Task<IActionResult> UpdateAddress(Address address)
 	{
 		var user = HttpContext.User;
-		var result = await _api.AddAddressToNewUser(address, user);
+		var result = await api.AddAddressToNewUser(address, user);
 		if (result)
 		{
 			return RedirectToAction("Index", "Home");

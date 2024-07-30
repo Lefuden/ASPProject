@@ -1,5 +1,6 @@
 ﻿using ASPProjectBackend.Data;
 using ASPProjectBackend.Models;
+using ASPProjectBackend.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -85,16 +86,56 @@ namespace ASPProjectBackend.Controllers
 			return Ok("Order successfully updated");
 		}
 
-		// POST: api/Orders
-		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-		[HttpPost]
-		public async Task<ActionResult<Order>> PostOrder([FromBody] Order order)
+
+
+		[HttpPost("Checkout")]
+		public async Task<IActionResult> Checkout([FromBody] List<int> gameIds)
 		{
-			context.Orders.Add(order);
+			List<Game> games = new();
+
+			foreach (var id in gameIds)
+			{
+				var game = await context.Games.FindAsync(id);
+
+				if (game != null)
+				{
+					if (game.Stock > 0)
+					{
+						game.Stock--;
+						games.Add(game);
+					}
+				}
+			}
+
+			foreach (var game in games)
+			{
+				context.Update(game);
+			}
+
 			await context.SaveChangesAsync();
 
-			return CreatedAtAction("GetOrder", new { id = order.OrderId }, order);
+			return Ok(new List<GameDto>(games.Select(GameToDto).ToList()));
 		}
+
+		private static GameDto GameToDto(Game game) => new()
+		{
+			Id = game.Id,
+			Name = game.Name,
+			SteamAppId = game.SteamAppId,
+			AboutTheGame = game.AboutTheGame,
+			ShortDescription = game.ShortDescription,
+			HeaderImage = game.HeaderImage,
+			Website = game.Website,
+			Developers = game.Developers,
+			Publishers = game.Publishers,
+			Genres = game.Genres,
+			Screenshots = game.Screenshots,
+			MetacriticScore = game.MetacriticScore,
+			ReleaseDate = game.ReleaseDate,
+			InitialPrice = game.InitialPrice,
+			DiscountPercent = game.DiscountPercent,
+			Stock = game.Stock
+		};
 
 		// DELETE: api/Orders/5
 		[HttpDelete("Delete/{id}")]
