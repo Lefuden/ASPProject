@@ -47,7 +47,7 @@ public partial class ApiServices
             return default;
         }
 
-        var response = await _client.GetAsync($"{orderId}");
+        var response = await _client.GetAsync($"Orders/{orderId}");
         if (!response.IsSuccessStatusCode)
         {
             return default;

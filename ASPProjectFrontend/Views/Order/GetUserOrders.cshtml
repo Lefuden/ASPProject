@@ -40,7 +40,10 @@
                 @Html.DisplayFor(modelItem => item.TotalOrderPrice)
             </td>
             <td>
-                    <a asp-action="GetSpecificOrder" value="@item.OrderId" name="orderId" class="btn accent-green">Details</a>
+                <form asp-action="GetSpecificOrder" method="get">
+                    <input type="hidden" name="orderId" value="@item.OrderId" />
+                    <button type="submit" class="btn accent-blue cart-button">Details</button>
+                </form>
             </td>
         </tr>
 }

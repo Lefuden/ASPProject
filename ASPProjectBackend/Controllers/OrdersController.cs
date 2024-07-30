@@ -15,6 +15,8 @@ namespace ASPProjectBackend.Controllers
         public async Task<ActionResult<List<OrderDto>>> GetAllOrders()
         {
             return await context.Orders
+                                .Include(o => o.User)
+                                    .ThenInclude(u => u.Address)
                                 .Select(order => DtoConverter.OrderToDto(order))
                                 .ToListAsync();
         }
@@ -45,7 +47,10 @@ namespace ASPProjectBackend.Controllers
                 return NotFound();
             }
 
-            var order = await context.Orders.FindAsync(id);
+            var order = await context.Orders
+                .Include(o => o.User)
+                    .ThenInclude(u => u.Address)
+                .FirstOrDefaultAsync(order => order.OrderId == id);
 
             if (order == null)
             {
