@@ -23,19 +23,17 @@ public class GameController(ApiServices api) : Controller
 
     // If needed, Admin only Create Game
 
-
-    // Admin only
     [HttpGet]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult> Edit(int id)
     {
         var game = await api.GetGameById(id);
         return View(game);
     }
 
-    // Admin only
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult> Edit(Game game)
     {
         var result = await api.EditGame(game);
@@ -47,15 +45,15 @@ public class GameController(ApiServices api) : Controller
         return View();
     }
 
-    // Admin only
+    [Authorize(Roles = "Admin")]
     public ActionResult Delete(int id)
     {
         return View();
     }
 
-    // Admin only
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
     public ActionResult Delete(int id, IFormCollection collection)
     {
         try

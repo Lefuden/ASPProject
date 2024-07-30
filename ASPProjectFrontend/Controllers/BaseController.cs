@@ -8,7 +8,6 @@ namespace ASPProjectFrontend.Controllers;
 
 public class BaseController(ApiServices api) : Controller
 {
-
     [AllowAnonymous]
     protected void SetShoppingCartInViewBagFromCookie()
     {
