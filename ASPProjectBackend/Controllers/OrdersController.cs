@@ -2,7 +2,6 @@
 using ASPProjectBackend.Helpers;
 using ASPProjectBackend.Models;
 using ASPProjectBackend.Models.DTO;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,42 +11,20 @@ namespace ASPProjectBackend.Controllers
     [ApiController]
     public class OrdersController(ApplicationDbContext context) : ControllerBase
     {
-        // GET: api/Orders
-        [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderDto>>> GetAllOrders()
-            => await context.Orders
-                            .Select(order => DtoConverter.OrderToDto(order))
-                            .ToListAsync();
-
-
-
-        // GET: api/Orders/5
-        [Authorize(Roles = "Admin,User")]
-        [HttpGet("{id}")]
-        public async Task<ActionResult<OrderDto>> GetOrder(int? id)
+        public async Task<ActionResult<List<OrderDto>>> GetAllOrders()
         {
-            if (id == null)
-            {
-                return NotFound(default);
-            }
-
-            var order = await context.Orders.FindAsync(id);
-
-            if (order == null)
-            {
-                return NotFound(default);
-            }
-
-            return DtoConverter.OrderToDto(order);
+            return await context.Orders
+                                .Select(order => DtoConverter.OrderToDto(order))
+                                .ToListAsync();
         }
 
         [HttpGet("User/{userId}")]
-        public async Task<ActionResult<IEnumerable<OrderDto>>> GetAllUserOrders(int? userId)
+        public async Task<ActionResult<List<OrderDto>>> GetAllUserOrders(int? userId)
         {
             if (userId == null)
             {
-                return NotFound(default);
+                return NotFound();
             }
 
             var orders = await context.Orders
@@ -58,6 +35,24 @@ namespace ASPProjectBackend.Controllers
                 .ToListAsync();
 
             return orders;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<OrderDto>> GetOrder(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var order = await context.Orders.FindAsync(id);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return DtoConverter.OrderToDto(order);
         }
 
         [HttpPost("Checkout")]

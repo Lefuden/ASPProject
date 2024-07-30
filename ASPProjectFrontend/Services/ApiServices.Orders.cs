@@ -27,7 +27,8 @@ public partial class ApiServices
             return [];
         }
 
-        var response = await _client.GetAsync($"User/{userId}");
+        var response = await _client.GetAsync($"Orders/User/{userId}");
+        Console.WriteLine(response);
         if (!response.IsSuccessStatusCode)
         {
             return [];

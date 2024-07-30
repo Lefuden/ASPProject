@@ -39,9 +39,9 @@
 <div>
     @if (User.IsInRole("User"))
     {
-        <a asp-controller="Home" asp-action="Index">Back to List</a>
+        <a asp-action="GetUserOrders" class="btn accent-red">Back to List</a>
     }else if (User.IsInRole("Admin"))
     {
-        <a asp-controller="Home" asp-action="Index">Back to List</a>
+        <a asp-action="GetAllOrders" class="btn accent-red">Back to List</a>
     }
 </div>

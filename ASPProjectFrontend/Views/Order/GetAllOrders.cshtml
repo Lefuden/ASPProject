@@ -6,7 +6,7 @@
 
 <h1>All orders</h1>
 
-<table class="table">
+<table class="table alt-bg-color text-color-purple">
     <thead>
         <tr>
             <th>
@@ -40,7 +40,7 @@
                 @Html.DisplayFor(modelItem => item.TotalOrderPrice)
             </td>
             <td>
-	            <a asp-action="GetSpecificOrder" value="@item.OrderId" name="orderId">Details</a>
+                    <a asp-action="GetSpecificOrder" value="@item.OrderId" name="orderId" class="btn accent-green">Details</a>
             </td>
         </tr>
 }
