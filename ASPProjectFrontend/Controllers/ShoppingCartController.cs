@@ -1,4 +1,5 @@
-﻿using ASPProjectFrontend.Services;
+﻿using ASPProjectFrontend.Models;
+using ASPProjectFrontend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +10,6 @@ public class ShoppingCartController(ApiServices api) : BaseController(api)
 	public async Task<IActionResult> Index()
 	{
 		var shoppingCart = GetShoppingCartFromCookie();
-
 		var games = await api.GetGamesFromIds(shoppingCart.Products);
 
 		return View(games);
@@ -31,7 +31,28 @@ public class ShoppingCartController(ApiServices api) : BaseController(api)
 		return RedirectToAction("Index");
 	}
 
-	// Checkout Enbart inloggad, är man inte inloggad, hänvisa anvädnaren att logga in och returnera MEN! Tillåt anownymous
-	// För då kan vi kolla HttpContext.User.Identity.IsAuthenticated
-	// Om vi inte är inloggade, hänvisa användaren till login men se till att dem returnerar tillbaka hit
+	//[Authorize(Roles = "User")]
+	[HttpPost]
+	[AllowAnonymous]
+	public async Task<IActionResult> Checkout(List<Game> games)
+	{
+		if (!User.IsInRole("User"))
+		{
+			return RedirectToAction("SignInWithGoogle", "Authentication", true);
+		}
+
+		if (games.Count == 0)
+		{
+			return NotFound();
+		}
+
+		var gamesCheckout = await api.Checkout(games);
+		return View("OrderConfirmation", gamesCheckout);
+	}
+
+	[HttpGet]
+	public IActionResult OrderConfirmation(List<Game> games)
+	{
+		return View(games);
+	}
 }
