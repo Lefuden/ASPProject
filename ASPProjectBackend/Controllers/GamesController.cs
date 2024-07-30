@@ -1,5 +1,5 @@
 ﻿using ASPProjectBackend.Data;
-using ASPProjectBackend.Models;
+using ASPProjectBackend.Helpers;
 using ASPProjectBackend.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,12 +11,10 @@ namespace ASPProjectBackend.Controllers
     public class GamesController(ApplicationDbContext context) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GameDto>>> GetAllGames()
+        public async Task<ActionResult<List<GameDto>>> GetAllGames()
         {
             var games = await context.Games.ToListAsync();
-            var gameDtoList = games.Select(GameToDto).ToList();
-
-            return gameDtoList;
+            return games.Select(DtoConverter.GameToDto).ToList();
         }
 
         [HttpGet("{id}")]
@@ -30,7 +28,7 @@ namespace ASPProjectBackend.Controllers
                 return NotFound();
             }
 
-            return GameToDto(game);
+            return DtoConverter.GameToDto(game);
         }
 
         [HttpPost("Edit")]
@@ -104,25 +102,5 @@ namespace ASPProjectBackend.Controllers
             }
 
         }
-
-        private static GameDto GameToDto(Game game) => new()
-        {
-            Id = game.Id,
-            Name = game.Name,
-            SteamAppId = game.SteamAppId,
-            AboutTheGame = game.AboutTheGame,
-            ShortDescription = game.ShortDescription,
-            HeaderImage = game.HeaderImage,
-            Website = game.Website,
-            Developers = game.Developers,
-            Publishers = game.Publishers,
-            Genres = game.Genres,
-            Screenshots = game.Screenshots,
-            MetacriticScore = game.MetacriticScore,
-            ReleaseDate = game.ReleaseDate,
-            InitialPrice = game.InitialPrice,
-            DiscountPercent = game.DiscountPercent,
-            Stock = game.Stock
-        };
     }
 }
