@@ -1,5 +1,5 @@
 ﻿@model Game
-
+@using ASPProjectFrontend.Helpers
 @{
     ViewData["Title"] = "Edit";
 }
@@ -34,7 +34,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="DiscountPercent" class="control-label"></label>
-                <input asp-for="DiscountPercent" value="@Model.DiscountPercent" class="form-control" />
+                <input asp-for="DiscountPercent" value="@DiscountConverter.ConvertFromProduct(Model.DiscountPercent)" class="form-control" />
                 <span asp-validation-for="DiscountPercent" class="text-danger"></span>
             </div>
 
@@ -50,13 +50,12 @@
             <input type="hidden" asp-for="MetacriticScore" value="@Model.MetacriticScore" />
             <input type="hidden" asp-for="ReleaseDate" value="@Model.ReleaseDate" />
 
-            <div class="form-group">
+            <div class="form-group justify-content-between">
                 <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-controller="Home" asp-action="Index" class="btn accent-blue">Back to Store</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-controller="Home" asp-action="Index">Back to Store</a>
-</div>
+

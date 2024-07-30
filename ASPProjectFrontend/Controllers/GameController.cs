@@ -1,4 +1,5 @@
-﻿using ASPProjectFrontend.Models;
+﻿using ASPProjectFrontend.Helpers;
+using ASPProjectFrontend.Models;
 using ASPProjectFrontend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,8 @@ public class GameController(ApiServices api) : Controller
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult> Edit(Game game)
     {
+        game.DiscountPercent = DiscountConverter.ConvertFromUserInput(game.DiscountPercent);
+
         var result = await api.EditGame(game);
         if (result)
         {
