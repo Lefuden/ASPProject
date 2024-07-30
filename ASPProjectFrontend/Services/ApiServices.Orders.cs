@@ -1,10 +1,12 @@
 ﻿using ASPProjectFrontend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 
 namespace ASPProjectFrontend.Services;
 
 public partial class ApiServices
 {
+    [Authorize(Roles = "Admin")]
     public async Task<List<Order>> GetAllOrders()
     {
         var response = await _client.GetAsync("Orders");
@@ -17,9 +19,41 @@ public partial class ApiServices
         return orders;
     }
 
-    public async Task<bool> EditOrder(Order editOrder)
+    [Authorize(Roles = "User")]
+    public async Task<List<Order>> GetAllUserOrders(int? userId)
     {
-        var response = await _client.PostAsJsonAsync("Orders/Edit", editOrder);
-        return response.IsSuccessStatusCode;
+        if (userId == null)
+        {
+            return [];
+        }
+
+        var response = await _client.GetAsync($"User/{userId}");
+        if (!response.IsSuccessStatusCode)
+        {
+            return [];
+        }
+
+        var jsonResponse = await response.Content.ReadAsStringAsync();
+        var orders = JsonConvert.DeserializeObject<List<Order>>(jsonResponse);
+        return orders;
+    }
+
+    [Authorize(Roles = "Admin,User")]
+    public async Task<Order> GetSpecificOrder(int? orderId)
+    {
+        if (orderId == null)
+        {
+            return default;
+        }
+
+        var response = await _client.GetAsync($"{orderId}");
+        if (!response.IsSuccessStatusCode)
+        {
+            return default;
+        }
+
+        var jsonResponse = await response.Content.ReadAsStringAsync();
+        var order = JsonConvert.DeserializeObject<Order>(jsonResponse);
+        return order;
     }
 }
