@@ -43,51 +43,6 @@ namespace ASPProjectBackend.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Games",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SteamAppId = table.Column<long>(type: "bigint", nullable: false),
-                    RequiredAge = table.Column<long>(type: "bigint", nullable: true),
-                    IsFree = table.Column<bool>(type: "bit", nullable: true),
-                    DetailedDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AboutTheGame = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ShortDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SupportedLanguages = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    HeaderImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Website = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PcRequirements = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MacRequirements = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LinuxRequirements = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Developers = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Publishers = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Categories = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Genres = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Screenshots = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Movies = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Platforms = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MetacriticScore = table.Column<long>(type: "bigint", nullable: true),
-                    MetacriticUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TotalRecommendations = table.Column<long>(type: "bigint", nullable: true),
-                    TotalAchievements = table.Column<long>(type: "bigint", nullable: true),
-                    ReleaseDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ComingSoon = table.Column<bool>(type: "bit", nullable: true),
-                    SupportInfo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Background = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ContentDescriptors = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    InitialPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    DiscountPercent = table.Column<float>(type: "real", nullable: false),
-                    Stock = table.Column<byte>(type: "tinyint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Games", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
@@ -262,32 +217,54 @@ namespace ASPProjectBackend.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderGames",
+                name: "Games",
                 columns: table => new
                 {
-                    OrderGameId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OrderId = table.Column<int>(type: "int", nullable: false),
-                    GameId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<byte>(type: "tinyint", nullable: false),
-                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SteamAppId = table.Column<long>(type: "bigint", nullable: false),
+                    RequiredAge = table.Column<long>(type: "bigint", nullable: true),
+                    IsFree = table.Column<bool>(type: "bit", nullable: true),
+                    DetailedDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AboutTheGame = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ShortDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SupportedLanguages = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HeaderImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Website = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PcRequirements = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MacRequirements = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LinuxRequirements = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Developers = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Publishers = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Categories = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Genres = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Screenshots = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Movies = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Platforms = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MetacriticScore = table.Column<long>(type: "bigint", nullable: true),
+                    MetacriticUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TotalRecommendations = table.Column<long>(type: "bigint", nullable: true),
+                    TotalAchievements = table.Column<long>(type: "bigint", nullable: true),
+                    ReleaseDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ComingSoon = table.Column<bool>(type: "bit", nullable: true),
+                    SupportInfo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Background = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContentDescriptors = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    InitialPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    DiscountPercent = table.Column<float>(type: "real", nullable: false),
+                    Stock = table.Column<byte>(type: "tinyint", nullable: false),
+                    OrderId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderGames", x => x.OrderGameId);
+                    table.PrimaryKey("PK_Games", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderGames_Games_GameId",
-                        column: x => x.GameId,
-                        principalTable: "Games",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_OrderGames_Orders_OrderId",
+                        name: "FK_Games_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
-                        principalColumn: "OrderId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "OrderId");
                 });
 
             migrationBuilder.CreateIndex(
@@ -335,13 +312,8 @@ namespace ASPProjectBackend.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderGames_GameId",
-                table: "OrderGames",
-                column: "GameId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderGames_OrderId",
-                table: "OrderGames",
+                name: "IX_Games_OrderId",
+                table: "Games",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
@@ -379,13 +351,10 @@ namespace ASPProjectBackend.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "OrderGames");
+                name: "Games");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "Games");
 
             migrationBuilder.DropTable(
                 name: "Orders");

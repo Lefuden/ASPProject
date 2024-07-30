@@ -1,18 +1,14 @@
 ﻿using ASPProjectFrontend.Models;
+using ASPProjectFrontend.Models.DTO;
 using Newtonsoft.Json;
 
 namespace ASPProjectFrontend.Services;
 
 public partial class ApiServices
 {
-	public async Task<List<Game>> Checkout(List<Game> games)
+	public async Task<List<Game>> Checkout(CheckoutDto checkout)
 	{
-		var gameIds = games
-			.AsEnumerable()
-			.Select(g => g.Id)
-			.ToList();
-
-		var response = await _client.PostAsJsonAsync("Orders/Checkout", gameIds);
+		var response = await _client.PostAsJsonAsync("Orders/Checkout", checkout);
 		if (!response.IsSuccessStatusCode)
 		{
 			return [];
@@ -24,7 +20,7 @@ public partial class ApiServices
 			return [];
 		}
 
-		games = JsonConvert.DeserializeObject<List<Game>>(jsonResponse)!;
+		var games = JsonConvert.DeserializeObject<List<Game>>(jsonResponse)!;
 		return games;
 	}
 }
