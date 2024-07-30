@@ -55,45 +55,17 @@ namespace ASPProjectBackend.Controllers
 				return NotFound();
 			}
 
-			//var orderDtoList = orders.Select(OrderToDto).ToList();
 			return orders;
 		}
 
-		// PUT: api/Orders/5
-		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-		[HttpPut("Edit")]
-		public async Task<IActionResult> PutOrder([FromBody] Order order)
-		{
-			if (!ModelState.IsValid)
-			{
-				return NotFound();
-			}
-
-			context.Update(order);
-
-			try
-			{
-				await context.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				if (!OrderExists(order.OrderId))
-				{
-					return NotFound();
-				}
-			}
-
-			return Ok("Order successfully updated");
-		}
-
-
-
 		[HttpPost("Checkout")]
-		public async Task<IActionResult> Checkout([FromBody] List<int> gameIds)
+		public async Task<IActionResult> Checkout([FromBody] CheckoutDto checkoutDto)
 		{
-			List<Game> games = new();
 
-			foreach (var id in gameIds)
+			List<Game> games = new();
+			List<GameDto> gamestoDto = new();
+
+			foreach (var id in checkoutDto.Games)
 			{
 				var game = await context.Games.FindAsync(id);
 
@@ -114,7 +86,33 @@ namespace ASPProjectBackend.Controllers
 
 			await context.SaveChangesAsync();
 
-			return Ok(new List<GameDto>(games.Select(GameToDto).ToList()));
+			var user = await context.Users
+				.Include(u => u.Address)
+				.FirstOrDefaultAsync(u => u.Id == checkoutDto.UserId);
+
+			if (user == null)
+			{
+				return BadRequest();
+			}
+
+			gamestoDto = new List<GameDto>(games.Select(GameToDto).ToList());
+			var order = new Order
+			{
+				UserId = user.Id,
+				User = user,
+				TotalOrderPrice = (decimal)games.Sum(tp => tp.DiscountPercent * tp.InitialPrice),
+				ShippingAddressId = user.AddressId.Value,
+				ShippingAddress = user.Address,
+				BillingAddressId = user.AddressId.Value,
+				BillingAddress = user.Address,
+				Games = games
+			};
+
+			await context.AddAsync(order);
+			await context.SaveChangesAsync();
+
+
+			return Ok(gamestoDto);
 		}
 
 		private static GameDto GameToDto(Game game) => new()
@@ -136,37 +134,5 @@ namespace ASPProjectBackend.Controllers
 			DiscountPercent = game.DiscountPercent,
 			Stock = game.Stock
 		};
-
-		// DELETE: api/Orders/5
-		[HttpDelete("Delete/{id}")]
-		public async Task<IActionResult> DeleteOrder(int id)
-		{
-			var order = await context.Orders.FindAsync(id);
-			if (order == null)
-			{
-				return NotFound();
-			}
-
-			context.Orders.Remove(order);
-			await context.SaveChangesAsync();
-
-			return NoContent();
-		}
-
-		private bool OrderExists(int id)
-		{
-			return context.Orders.Any(e => e.OrderId == id);
-		}
-
-		//private static OrderDto OrderToDto(Order order) => new()
-		//{
-		//    OrderId = order.OrderId,
-		//    OrderDate = order.OrderDate,
-		//    OrderStatus = order.OrderStatus,
-		//    TotalOrderPrice = order.TotalOrderPrice,
-		//    ShippingAddress = order.ShippingAddress,
-		//    BillingAddress = order.BillingAddress,
-		//    Products = order.Products
-		//};
 	}
 }

@@ -118,6 +118,9 @@ namespace ASPProjectBackend.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
                     b.Property<string>("PcRequirements")
                         .HasColumnType("nvarchar(max)");
 
@@ -165,6 +168,8 @@ namespace ASPProjectBackend.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OrderId");
+
                     b.ToTable("Games");
                 });
 
@@ -203,38 +208,6 @@ namespace ASPProjectBackend.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("ASPProjectBackend.Models.OrderGame", b =>
-                {
-                    b.Property<int>("OrderGameId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderGameId"));
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<byte>("Quantity")
-                        .HasColumnType("tinyint");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("OrderGameId");
-
-                    b.HasIndex("GameId");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("OrderGames");
                 });
 
             modelBuilder.Entity("ASPProjectBackend.Models.User", b =>
@@ -451,6 +424,13 @@ namespace ASPProjectBackend.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ASPProjectBackend.Models.Game", b =>
+                {
+                    b.HasOne("ASPProjectBackend.Models.Order", null)
+                        .WithMany("Games")
+                        .HasForeignKey("OrderId");
+                });
+
             modelBuilder.Entity("ASPProjectBackend.Models.Order", b =>
                 {
                     b.HasOne("ASPProjectBackend.Models.Address", "BillingAddress")
@@ -476,25 +456,6 @@ namespace ASPProjectBackend.Data.Migrations
                     b.Navigation("ShippingAddress");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ASPProjectBackend.Models.OrderGame", b =>
-                {
-                    b.HasOne("ASPProjectBackend.Models.Game", "Game")
-                        .WithMany()
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ASPProjectBackend.Models.Order", "Order")
-                        .WithMany("Games")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Game");
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("ASPProjectBackend.Models.User", b =>

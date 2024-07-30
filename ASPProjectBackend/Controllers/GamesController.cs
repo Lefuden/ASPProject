@@ -26,7 +26,7 @@ namespace ASPProjectBackend.Controllers
 
             if (game == null)
             {
-                Console.WriteLine("Game not found");
+                Console.WriteLine("GameDto not found");
                 return NotFound();
             }
 
@@ -42,7 +42,7 @@ namespace ASPProjectBackend.Controllers
 
                 if (game == null)
                 {
-                    Console.WriteLine("Game not found");
+                    Console.WriteLine("GameDto not found");
                     return NotFound();
                 }
 
@@ -81,7 +81,7 @@ namespace ASPProjectBackend.Controllers
             {
                 if (id == null)
                 {
-                    Console.WriteLine("Game not found");
+                    Console.WriteLine("GameDto not found");
                     return NotFound();
                 }
 
@@ -89,7 +89,7 @@ namespace ASPProjectBackend.Controllers
 
                 if (game == null)
                 {
-                    Console.WriteLine("Game not found");
+                    Console.WriteLine("GameDto not found");
                     return NotFound();
                 }
 
