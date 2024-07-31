@@ -18,11 +18,14 @@ public partial class ApiServices
 
         var result = await response.Content.ReadFromJsonAsync<AuthResponse>();
 
+        //validerar jwt token att den överenstämmer
+        //med issuer och audience och key (secrets.json)
         List<Claim> claims = _jwtValidator.ValidateGoogleToken(result.Token);
 
         ClaimsIdentity claimsIdentity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         AuthenticationProperties authProperties = new()
         {
+            //tar inte bort cookien om man stänger webläsaren/lämnar sidan.
             IsPersistent = true
         };
 

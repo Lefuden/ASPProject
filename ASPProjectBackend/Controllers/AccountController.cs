@@ -9,31 +9,28 @@ namespace ASPProjectBackend.Controllers;
 [ApiController]
 public class AccountController(ApplicationDbContext context) : ControllerBase
 {
-    private readonly ApplicationDbContext _context = context;
 
     [HttpPost("AddAddress")]
     public async Task<IActionResult> AddAddress(UpdateAddress updateAddress)
     {
         try
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == updateAddress.Email);
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == updateAddress.Email);
 
             if (user == null)
             {
-                //Console.WriteLine("User not found");
                 return BadRequest();
             }
-            //Console.WriteLine("User found!");
 
-            _context.Add(updateAddress.Address);
+            context.Add(updateAddress.Address);
             await context.SaveChangesAsync();
 
             user.Address = updateAddress.Address;
             user.AddressId = updateAddress.Address.AddressId;
 
-            _context.Update(user);
+            context.Update(user);
 
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
             return Ok();
         }
         catch (Exception ex)
@@ -52,7 +49,6 @@ public class AccountController(ApplicationDbContext context) : ControllerBase
 
             if (address == null)
             {
-                Console.WriteLine("Address not found");
                 return NotFound();
             }
 
@@ -73,11 +69,10 @@ public class AccountController(ApplicationDbContext context) : ControllerBase
         }
     }
 
-    //Fixa AddressDto
     [HttpGet("Address")]
     public async Task<ActionResult<IEnumerable<Address>>> GetAllAddresses()
     {
-        return await _context.Addresses.ToListAsync();
+        return await context.Addresses.ToListAsync();
     }
 
     [HttpGet("Address/{id}")]
@@ -87,18 +82,16 @@ public class AccountController(ApplicationDbContext context) : ControllerBase
 
         if (address == null)
         {
-            Console.WriteLine("Address not found");
             return NotFound();
         }
 
         return address;
     }
 
-    //Fixa UserDto
     [HttpGet("Users")]
     public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
     {
-        return await _context.Users.ToListAsync();
+        return await context.Users.ToListAsync();
     }
 
     [HttpGet("Users/{id}")]
@@ -108,7 +101,6 @@ public class AccountController(ApplicationDbContext context) : ControllerBase
 
         if (user == null)
         {
-            Console.WriteLine("User not found");
             return NotFound();
         }
 

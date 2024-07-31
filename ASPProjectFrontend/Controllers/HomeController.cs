@@ -1,15 +1,12 @@
 using ASPProjectFrontend.Models;
 using ASPProjectFrontend.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace ASPProjectFrontend.Controllers;
 
-public class HomeController(ApiServices api, ILogger<HomeController> logger) : BaseController(api)
+public class HomeController(ApiServices api) : BaseController(api)
 {
-    private readonly ILogger<HomeController> _logger = logger;
-
     public async Task<IActionResult> Index()
     {
         SetShoppingCartInViewBagFromCookie();
@@ -46,7 +43,6 @@ public class HomeController(ApiServices api, ILogger<HomeController> logger) : B
         return RedirectToAction("Index");
     }
 
-    [Authorize(Roles = "Admin")]
     public IActionResult Privacy()
     {
         return View();

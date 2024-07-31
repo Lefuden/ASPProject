@@ -23,23 +23,24 @@ public class AuthenticationController(UserManager<User> userManager, SignInManag
     private readonly string _jwtkey = configuration["Jwt:Key"];
     private readonly string _clientId = configuration["Google:ClientId"];
 
+    //Google Oauth2 login.
     [HttpPost("google-login")]
     public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginModel model)
     {
         bool newUser = false;
-        var payload = await VerifyGoogleToken(model.IdToken);
+        var payload = await VerifyGoogleToken(model.IdToken); //verifierar att användaren finns
         if (payload == null)
         {
             return Unauthorized();
         }
 
+        //använder user manager för att hitta användare baserad på email
         var user = await _userManager.FindByEmailAsync(payload.Email);
         if (user == null)
         {
-            newUser = true;
+            newUser = true; //om email är null, vill vi skapa ny användare
             user = new User
             {
-                //UserName = payload.Name.Replace(" ", "").Trim(),
                 UserName = payload.Name.Trim(),
                 Email = payload.Email,
                 EmailConfirmed = true
@@ -51,6 +52,8 @@ public class AuthenticationController(UserManager<User> userManager, SignInManag
                 return BadRequest(result.Errors);
             }
 
+            //vi sätter roller till användare.
+            //om emailen matchar våra, skapa admin-konto.
             if (payload.Email == "lefuden@gmail.com" || payload.Email == "skoog.tobias@gmail.com")
             {
                 result = await _userManager.AddToRoleAsync(user, "Admin");
@@ -59,6 +62,7 @@ public class AuthenticationController(UserManager<User> userManager, SignInManag
                     Console.WriteLine(result.Errors);
                 }
             }
+            //annars blir det en kund/User.
             else
             {
                 result = await _userManager.AddToRoleAsync(user, "User");
@@ -67,13 +71,13 @@ public class AuthenticationController(UserManager<User> userManager, SignInManag
                     return BadRequest(result.Errors);
                 }
             }
-
-
         }
 
+        //om användaren redan finns, kontrollera att användare har en roll.
         var roles = await _userManager.GetRolesAsync(user);
         if (!roles.Any())
         {
+            //ingen roll, lägg till roll User.
             await _userManager.AddToRoleAsync(user, "User");
             roles = ["User"];
         }
@@ -83,10 +87,14 @@ public class AuthenticationController(UserManager<User> userManager, SignInManag
         return Ok(new AuthResponse
         {
             Token = token,
+            //bool för att kontrollera om det är en ny användare,
+            //om ny, skapa adress.
             NewUser = newUser
         });
     }
 
+    //verifierar googles token, validering.
+    //returnerar payload (google user data)
     private async Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(string idToken)
     {
         try
@@ -103,21 +111,23 @@ public class AuthenticationController(UserManager<User> userManager, SignInManag
             return null;
         }
     }
+
     private string GenerateJwtToken(string userName, List<string> roles, string email, int userId)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtkey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+        //konfigurera vilka claims användare ska ha (typ user properties)
         var claims = new List<Claim>
         {
             new (ClaimTypes.Email, email),
-            new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), //jwt tokens identifierare
             new (ClaimTypes.Name, userName),
             new (ClaimTypes.NameIdentifier, userId.ToString())
         };
 
         foreach (var role in roles)
-        {
+        {   //lägger till de roller som användaren har till claims
             claims.Add(new Claim(ClaimTypes.Role, role));
         }
 

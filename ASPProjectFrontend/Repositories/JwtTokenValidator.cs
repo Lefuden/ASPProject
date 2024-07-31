@@ -3,6 +3,7 @@ using System.Security.Claims;
 
 namespace ASPProjectFrontend.Repositories;
 
+//validerar att jwt token är korrekt
 public class JwtTokenValidator(IConfiguration configuration) : IJwtTokenValidator
 {
     private readonly string _issuer = configuration["Jwt:Issuer"];

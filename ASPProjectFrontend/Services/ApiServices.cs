@@ -8,3 +8,5 @@ public partial class ApiServices(IHttpClientFactory httpClientFactory, IHttpCont
     private readonly HttpClient _client = httpClientFactory.CreateClient("ApiASPProject");
     private readonly IJwtTokenValidator _jwtValidator = jwtValidator;
 }
+
+//abstraktera kommunikation till databas från användaren

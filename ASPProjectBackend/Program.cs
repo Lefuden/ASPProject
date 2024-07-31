@@ -8,15 +8,9 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure logging
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
-
-// Add services to the container.
-
 builder.Services.AddControllers()
 .AddJsonOptions(options =>
-{
+{   //Förhindrar infinite loop mellan order och user
     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
 });
 
@@ -25,50 +19,41 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 {
+    //lägger till User och IDrole.
+    //konfigurerar skapar filtrering för tillåtna tecken för användarnamn
+    //och påtvingar unik email
     options.User.AllowedUserNameCharacters = "\"abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ0123456789-._@+ \";";
     options.User.RequireUniqueEmail = true;
 })
-.AddRoles<IdentityRole<int>>()
+.AddRoles<IdentityRole<int>>() //int för att inte få en GUID.
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
 
 builder.Services.AddAuthentication(options =>
-{
+{   //definierar scheman för authentication.
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
 .AddJwtBearer(options =>
-{
+{   //ställer in basvärden för jwt token
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidIssuer = builder.Configuration["Jwt:Issuer"], //issuer - backend
+        ValidAudience = builder.Configuration["Jwt:Audience"], // audience - frontend
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
     };
 });
 
 builder.Services.AddAuthorization();
-
-
 builder.Services.AddEndpointsApiExplorer();
-
-
 builder.Services.AddSwaggerGen();
 
-
-//builder.Services.AddScoped<ApiServices>();
-
-// Add logging before the build
-
 var app = builder.Build();
-var logger = app.Services.GetRequiredService<ILogger<Program>>();
-
-logger.LogInformation("Application build complete.");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -87,34 +72,19 @@ app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
-    logger.LogInformation("Creating service scope...");
-    try
-    {
-        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
-        logger.LogInformation("Role manager obtained.");
+    //ser till att User roles (admin, user) finns i DB.
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
 
-        await CreateDefaultRoles(roleManager);
-        logger.LogInformation("Default roles created.");
+    await CreateDefaultRoles(roleManager);
 
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        logger.LogInformation("ApplicationDbContext obtained.");
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        //var api = scope.ServiceProvider.GetRequiredService<ApiServices>();
-        //logger.LogInformation("ApiServices obtained.");
-
-        await DbInitializer.Init(context);
-        logger.LogInformation("Database initialization complete.");
-    }
-    catch (Exception ex)
-    {
-        logger.LogError(ex, "An error occurred during application initialization.");
-        throw; // Re-throw the exception to fail the app startup if initialization fails
-    }
+    //kör Dbinit om det inte finns data.
+    await DbInitializer.Init(context);
 }
 
 app.Run();
 
-logger.LogInformation("Application started.");
 
 static async Task CreateDefaultRoles(RoleManager<IdentityRole<int>> roleManager)
 {

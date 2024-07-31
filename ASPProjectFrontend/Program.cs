@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Authentication.OAuth;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
+//skapar en httpclient med backend adressen specifierad
 builder.Services.AddHttpClient("ApiASPProject", client =>
     client.BaseAddress = new Uri(builder.Configuration["API:Backend"]!));
 
@@ -28,6 +28,7 @@ builder.Services.AddAuthentication(options =>
     options.Scope.Add("email");
     options.Events = new OAuthEvents
     {
+        //spara id token som cookie vid auth (google token id)
         OnCreatingTicket = async ctx =>
         {
             if (ctx.TokenResponse != null && ctx.TokenResponse.Response.RootElement.TryGetProperty("id_token", out var idToken))
@@ -46,6 +47,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddHttpContextAccessor();
+//dependency injection
 builder.Services.AddScoped<ApiServices>();
 builder.Services.AddScoped<IJwtTokenValidator, JwtTokenValidator>();
 
